@@ -26,8 +26,8 @@ jobs:
         run: uv build --wheel
 
       - name: Publish to PyPI
-        #        env:
-        #          TWINE_USERNAME: __token__
-        #          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          uv publish --verbose
+          uv publish --password=$TWINE_PASSWORD --username=$TWINE_USERNAME  --verbose
