@@ -26,4 +26,4 @@ SHELL := /bin/bash
 
 test:
 	@echo "Running tests"
-	@uv run pytest tests/test_core.py -v -s --log-cli-level=INFO
+	@uv run pytest tests/ -v -s --log-cli-level=INFO
