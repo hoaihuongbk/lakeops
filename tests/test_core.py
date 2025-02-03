@@ -90,3 +90,4 @@ def test_read_write_iceberg(spark, lake_ops, tmp_path):
     logger.info(f"Read {count} rows from Iceberg table")
     assert count == 2
     assert read_df.collect() == test_data.collect()
+
