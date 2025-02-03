@@ -4,10 +4,9 @@ A modern data lake operations toolkit supporting multiple formats (Delta, Iceber
 
 ## Features
 
-- Multi-format support: Delta, Iceberg, Parquet, CSV, JSON
+- Multi-format support: Delta, Iceberg, Parquet
 - Multiple engine backends: Apache Spark, Polars
-- Catalog integration: Hive Metastore, Unity Catalog, REST catalogs
-- Storage operations: read, write, delete, archive
+- Storage operations: read, write
 - Cloud storage support: S3, Azure Blob, GCS
 
 ## Quick Start
