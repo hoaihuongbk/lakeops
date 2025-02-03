@@ -5,8 +5,13 @@ on:
     types: [ created ]
 
 jobs:
-  deploy:
+  pypi-publish:
     runs-on: ubuntu-latest
+    # Specifying a GitHub environment is optional, but strongly encouraged
+    environment: pypi
+    permissions:
+      # IMPORTANT: this permission is mandatory for Trusted Publishing
+      id-token: write
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -26,8 +31,4 @@ jobs:
         run: uv build --wheel
 
       - name: Publish to PyPI
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          uv publish --password=$TWINE_PASSWORD --username=$TWINE_USERNAME  --verbose
+        uses: pypa/gh-action-pypi-publish@release/v1
