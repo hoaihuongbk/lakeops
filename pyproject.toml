@@ -1,0 +1,27 @@
+[project]
+name = "lakeops"
+version = "0.1.0"
+description = "Data lake operations toolkit"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "delta-spark~=3.3.0",
+    "pyspark~=3.5.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.4",
+]
+lint = [
+    "ruff>=0.9.4",
+]
+
