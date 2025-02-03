@@ -14,9 +14,9 @@ A modern data lake operations toolkit supporting multiple formats (Delta, Iceber
 ```python
 from pyspark.sql import SparkSession
 from lakeops import LakeOps
-from lakeops.core.engine import SparkEngine
+from lakeops.core.engine import SparkEngine, PolarsEngine
 
-# Set up Spark
+# Set either engine Spark or Polars
 spark = SparkSession.builder
     .appName("LakeOps")
     .config("spark.jars.packages", "iceberg-spark-runtime-3.5_2.12:1.6.1")
@@ -27,12 +27,18 @@ spark = SparkSession.builder
     .config("spark.sql.catalog.local.warehouse", "/app/data") \
     .getOrCreate()
 
-# Initialize LakeOps
 engine = SparkEngine(spark)
+# engine = PolarsEngine()
+
+# Init lakeops
 ops = LakeOps(engine)
 
 # Read data from table name
 df = ops.read("local.db.test_table", format="iceberg")
+
+# Write data to table name
+ops.write(df, "local.db.test_table", format="iceberg")
+
 ```
 
 ## Installation
