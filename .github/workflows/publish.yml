@@ -1,19 +1,33 @@
 name: Publish to PyPI
 
 on:
+  workflow_call:
+    inputs:
+      python-version:
+        required: false
+        type: string
+        default: "3.10"
   release:
     types: [ created ]
 
 jobs:
+  runs-on: ubuntu-latest
   pypi-publish:
-    needs: [ setup ]
-    uses: ./.github/workflows/common.yml
     # Specifying a GitHub environment is optional, but strongly encouraged
     environment: pypi
     permissions:
       # IMPORTANT: this permission is mandatory for Trusted Publishing
       id-token: write
     steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
       - name: Install dependencies
         run: |
           uv sync

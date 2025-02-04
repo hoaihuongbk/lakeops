@@ -1,6 +1,12 @@
 name: Deploy Docs
 
 on:
+  workflow_call:
+    inputs:
+      python-version:
+        required: false
+        type: string
+        default: "3.10"
   push:
     branches: [main]
     paths:
@@ -12,12 +18,22 @@ permissions:
 
 jobs:
   docs:
-    needs: [setup]
-    uses: ./.github/workflows/common.yml
+    runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ inputs.python-version }}
+
+      - name: Install uv
+        run: curl -LsSf https://astral.sh/uv/install.sh | sh
+
       - name: Install dependencies
         run: uv sync --group docs
+
       - name: Build docs
         run: mkdocs build --clean
+
       - name: Deploy docs
         run: mkdocs gh-deploy --force
