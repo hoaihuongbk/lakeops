@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # LakeOps
 
 A modern data lake operations toolkit supporting multiple formats (Delta, Iceberg, Parquet) and engines (Spark, Polars).

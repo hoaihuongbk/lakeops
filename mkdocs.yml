@@ -2,16 +2,28 @@ site_name: LakeOps
 theme:
   name: material
   palette:
-    primary: blue
+    # Palette toggle for light mode
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
   features:
     - navigation.tabs
-    - navigation.sections
+    - toc.integrate
+  icon:
+    repo: fontawesome/brands/git-alt
+
+repo_url: https://github.com/hoaihuongbk/lakeops
 
 nav:
   - Getting Started: index.md
-  - User Guide:
-      - Basic Usage: guide/basic-usage.md
-      - Engines: guide/engines.md
+  - Engines: guide/engines.md
 
 plugins:
   - search

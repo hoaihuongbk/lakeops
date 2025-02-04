@@ -15,3 +15,8 @@ test:
 lint:
 	@echo "Linting the project"
 	@uv tool run ruff check src/ --fix
+
+test_docs:
+	@echo "Generating documentation"
+	@uv run mkdocs build --clean
+	@uv run mkdocs serve
