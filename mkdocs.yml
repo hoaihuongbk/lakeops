@@ -8,14 +8,10 @@ theme:
     - navigation.sections
 
 nav:
-  - Home: index.md
-  - Getting Started: getting-started.md
+  - Getting Started: index.md
   - User Guide:
-      - Installation: guide/installation.md
       - Basic Usage: guide/basic-usage.md
       - Engines: guide/engines.md
-      - Formats: guide/formats.md
-  - API Reference: api.md
 
 plugins:
   - search
