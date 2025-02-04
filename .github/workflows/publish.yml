@@ -11,8 +11,8 @@ on:
     types: [ created ]
 
 jobs:
-  runs-on: ubuntu-latest
   pypi-publish:
+    runs-on: ubuntu-latest
     # Specifying a GitHub environment is optional, but strongly encouraged
     environment: pypi
     permissions:

@@ -11,12 +11,12 @@ on:
     branches: [ main ]
     paths:
       - 'src/lakeops/**'
-      - pyproject.toml
+      - 'pyproject.toml'
   pull_request:
     branches: [ main ]
     paths:
       - 'src/lakeops/**'
-      - pyproject.toml
+      - 'pyproject.toml'
 
 jobs:
   test:
