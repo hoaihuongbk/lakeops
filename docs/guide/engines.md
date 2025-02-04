@@ -1,3 +1,8 @@
+---
+hide:
+  - navigation
+---
+
 # Engines
 
 LakeOps supports multiple execution engines:

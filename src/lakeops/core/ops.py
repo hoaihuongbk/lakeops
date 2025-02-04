@@ -30,4 +30,7 @@ class LakeOps:
                 data, path_or_table_name, format, mode, options
             )
 
+        if format == "iceberg":
+            raise ValueError("Table name must be provided for Iceberg format")
+
         return self.engine.write_table(data, path_or_table_name, format, mode, options)
