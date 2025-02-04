@@ -1,5 +1,7 @@
 import pytest
 import logging
+import polars as pl
+from polars.testing import assert_frame_equal
 from pyspark.sql import SparkSession
 from lakeops import LakeOps
 from lakeops.core.engine import SparkEngine
@@ -39,8 +41,11 @@ def lake_ops(spark):
 def test_read_write_delta(spark, lake_ops, tmp_path):
     logger.info(f"Using temporary directory: {tmp_path}")
 
-    # Create test data
-    test_data = spark.createDataFrame([(1, "John"), (2, "Jane")], ["id", "name"])
+    # Create test data using Polars
+    test_data = pl.DataFrame({
+        "id": [1, 2],
+        "name": ["John", "Jane"]
+    })
 
     # Write data using LakeOps
     test_path = str(tmp_path / "test_table")
@@ -52,17 +57,20 @@ def test_read_write_delta(spark, lake_ops, tmp_path):
     read_df = lake_ops.read(test_path, format="delta")
 
     # Verify data
-    count = read_df.count()
-    logger.info(f"Read {count} rows from Delta table")
-    assert count == 2
-    assert read_df.collect() == test_data.collect()
+    row_count = read_df.shape[0]
+    logger.info(f"Read {row_count} rows from Polars Delta table")
+    assert row_count == 2
+    assert_frame_equal(read_df, test_data)
 
 
 def test_read_write_iceberg(spark, lake_ops, tmp_path):
     logger.info(f"Using temporary directory: {tmp_path}")
 
     # Create test data
-    test_data = spark.createDataFrame([(1, "Alice"), (2, "Bob")], ["id", "name"])
+    test_data = pl.DataFrame({
+        "id": [1, 2],
+        "name": ["Alice", "Bob"]
+    })
 
     # Write data using LakeOps
     # Use proper Iceberg table path with catalog
@@ -86,8 +94,8 @@ def test_read_write_iceberg(spark, lake_ops, tmp_path):
     read_df = lake_ops.read(table_name, format="iceberg")
 
     # Verify data
-    count = read_df.count()
-    logger.info(f"Read {count} rows from Iceberg table")
-    assert count == 2
-    assert read_df.collect() == test_data.collect()
+    row_count = read_df.shape[0]
+    logger.info(f"Read {row_count} rows from Polars Delta table")
+    assert row_count == 2
+    assert_frame_equal(read_df, test_data)
 

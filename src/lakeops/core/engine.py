@@ -1,3 +1,6 @@
+import pyarrow as pa
+import polars as pl
+from pyspark.sql import DataFrame
 from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
 
@@ -9,13 +12,13 @@ class Engine(ABC):
         path_or_table_name: str,
         format: str,
         options: Optional[Dict[str, Any]] = None,
-    ) -> Any:
+    ) -> pl.DataFrame:
         pass
 
     @abstractmethod
     def write_table(
         self,
-        data: Any,
+        data: pl.DataFrame,
         path: str,
         format: str,
         mode: str = "overwrite",
@@ -26,7 +29,7 @@ class Engine(ABC):
     @abstractmethod
     def write_to_table(
         self,
-        data: Any,
+        data: pl.DataFrame,
         table_name: str,
         format: str,
         mode: str = "overwrite",
@@ -39,40 +42,57 @@ class SparkEngine(Engine):
     def __init__(self, spark_session):
         self.spark = spark_session
 
+    def _convert_to_spark_df(self, data: pl.DataFrame) -> DataFrame:
+        # Convert Polars DataFrame to Spark DataFrame via Arrow
+        self.spark.conf.set("spark.sql.execution.arrow.pyspark.enabled", "true")
+        return self.spark.createDataFrame(data.to_pandas())
+
+    def _covert_to_polars_df(self, spark_df: DataFrame) -> pl.DataFrame:
+        # Convert Spark DataFrame to Polars DataFrame via Arrow
+        # https://stackoverflow.com/questions/73203318/how-to-transform-spark-dataframe-to-polars-dataframe
+        # spark-memory -> arrow/polars-memory
+        return pl.from_arrow(pa.Table.from_batches(spark_df._collect_as_arrow()))
+
     def read_table(
         self,
         path_or_table_name: str,
         format: str,
         options: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> pl.DataFrame:
         reader = self.spark.read.format(format)
         if options:
             reader = reader.options(**options)
-        return reader.load(path_or_table_name)
+
+        spark_df = reader.load(path_or_table_name)
+        return self._covert_to_polars_df(spark_df)
 
     def write_table(
         self,
-        data: Any,
+        data: pl.DataFrame,
         path: str,
         format: str,
         mode: str = "overwrite",
         options: Optional[Dict[str, Any]] = None,
     ):
-        writer = data.write.format(format).mode(mode)
+        spark_df = self._convert_to_spark_df(data)
+
+        writer = spark_df.write.format(format).mode(mode)
         if options:
             writer = writer.options(**options)
         writer.save(path)
 
     def write_to_table(
         self,
-        data: Any,
+        data: pl.DataFrame,
         table_name: str,
         format: str,
         mode: str = "overwrite",
         options: Optional[Dict[str, Any]] = None,
     ):
         # https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.writeTo.html
-        writer = data.writeTo(table_name).using(format)
+        spark_df = self._convert_to_spark_df(data)
+
+        writer = spark_df.writeTo(table_name).using(format)
         if options:
             writer = writer.options(**options)
         if mode == "overwrite":
@@ -82,31 +102,26 @@ class SparkEngine(Engine):
 
 
 class PolarsEngine(Engine):
-    def __init__(self):
-        import polars as pl
-
-        self.pl = pl
-
     def read_table(
         self,
         path_or_table_name: str,
         format: str,
         options: Optional[Dict[str, Any]] = None,
-    ):
+    ) -> pl.DataFrame:
         if format == "delta":
-            return self.pl.read_delta(path_or_table_name, delta_table_options=options)
+            return pl.read_delta(path_or_table_name, delta_table_options=options)
         elif format == "parquet":
-            return self.pl.read_parquet(path_or_table_name)
+            return pl.read_parquet(path_or_table_name)
         elif format == "csv":
-            return self.pl.read_csv(path_or_table_name)
+            return pl.read_csv(path_or_table_name)
         elif format == "json":
-            return self.pl.read_json(path_or_table_name)
+            return pl.read_json(path_or_table_name)
         else:
             raise ValueError(f"Unsupported format: {format}")
 
     def write_table(
         self,
-        data: Any,
+        data: pl.DataFrame,
         path: str,
         format: str,
         mode: str = "overwrite",
