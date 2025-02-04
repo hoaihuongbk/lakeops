@@ -1,7 +1,5 @@
 from typing import Any, Dict, Optional
 
-import polars as pl
-
 from .engines import Engine, PolarsEngine
 
 
@@ -14,13 +12,13 @@ class LakeOps:
         path_or_table_name: str,
         format: str = "delta",
         options: Optional[Dict[str, Any]] = None,
-    ) -> pl.DataFrame:
+    ) -> Any:
         """Read table from path"""
         return self.engine.read_table(path_or_table_name, format, options)
 
     def write(
         self,
-        data: pl.DataFrame,
+        data: Any,
         path_or_table_name: str,
         format: str = "delta",
         mode: str = "overwrite",

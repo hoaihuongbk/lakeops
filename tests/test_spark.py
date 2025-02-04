@@ -1,7 +1,5 @@
 import pytest
 import logging
-import polars as pl
-from polars.testing import assert_frame_equal
 from pyspark.sql import SparkSession
 from lakeops import LakeOps
 from lakeops.core.engines import SparkEngine
@@ -42,10 +40,7 @@ def test_read_write_delta(spark, lake_ops, tmp_path):
     logger.info(f"Using temporary directory: {tmp_path}")
 
     # Create test data using Polars
-    test_data = pl.DataFrame({
-        "id": [1, 2],
-        "name": ["John", "Jane"]
-    })
+    test_data = spark.createDataFrame([(1, "John"), (2, "Jane")], ["id", "name"])
 
     # Write data using LakeOps
     test_path = str(tmp_path / "test_table")
@@ -57,20 +52,17 @@ def test_read_write_delta(spark, lake_ops, tmp_path):
     read_df = lake_ops.read(test_path, format="delta")
 
     # Verify data
-    row_count = read_df.shape[0]
+    row_count = read_df.count()
     logger.info(f"Read {row_count} rows from Polars Delta table")
     assert row_count == 2
-    assert_frame_equal(read_df, test_data)
+    assert read_df.collect() == test_data.collect()
 
 
 def test_read_write_iceberg(spark, lake_ops, tmp_path):
     logger.info(f"Using temporary directory: {tmp_path}")
 
     # Create test data
-    test_data = pl.DataFrame({
-        "id": [1, 2],
-        "name": ["Alice", "Bob"]
-    })
+    test_data = spark.createDataFrame([(1, "Alice"), (2, "Bob")], ["id", "name"])
 
     # Write data using LakeOps
     # Use proper Iceberg table path with catalog
@@ -94,8 +86,8 @@ def test_read_write_iceberg(spark, lake_ops, tmp_path):
     read_df = lake_ops.read(table_name, format="iceberg")
 
     # Verify data
-    row_count = read_df.shape[0]
+    row_count = read_df.count()
     logger.info(f"Read {row_count} rows from Polars Delta table")
     assert row_count == 2
-    assert_frame_equal(read_df, test_data)
+    assert read_df.collect() == test_data.collect()
 

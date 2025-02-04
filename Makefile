@@ -2,7 +2,7 @@ SHELL := /bin/bash
 
 setup:
 	@echo "Initializing the environment"
-	@brew install uv
+	@uv sync --all-extras --all-groups
 
 build:
 	@echo "Building the project"
