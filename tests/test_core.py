@@ -4,7 +4,7 @@ import polars as pl
 from polars.testing import assert_frame_equal
 from pyspark.sql import SparkSession
 from lakeops import LakeOps
-from lakeops.core.engine import SparkEngine
+from lakeops.core.engines import SparkEngine
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)

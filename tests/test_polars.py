@@ -3,7 +3,6 @@ import logging
 import polars as pl
 from polars.testing import assert_frame_equal
 from lakeops import LakeOps
-from lakeops.core.engine import PolarsEngine
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -11,8 +10,7 @@ logger = logging.getLogger(__name__)
 
 @pytest.fixture
 def lake_ops():
-    engine = PolarsEngine()
-    return LakeOps(engine)
+    return LakeOps()
 
 
 def test_read_write_delta(lake_ops, tmp_path):

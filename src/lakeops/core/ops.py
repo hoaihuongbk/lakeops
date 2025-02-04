@@ -1,11 +1,13 @@
+from typing import Any, Dict, Optional
+
 import polars as pl
-from typing import Optional, Dict, Any
-from .engine import Engine
+
+from .engines import Engine, PolarsEngine
 
 
 class LakeOps:
-    def __init__(self, engine: Engine):
-        self.engine = engine
+    def __init__(self, engine: Optional[Engine] = None):
+        self.engine = engine or PolarsEngine()
 
     def read(
         self,

@@ -11,3 +11,7 @@ build:
 test:
 	@echo "Running tests"
 	@uv run pytest tests/ -v -s --log-cli-level=INFO
+
+lint:
+	@echo "Linting the project"
+	@uv tool run ruff check src/ --fix
