@@ -17,5 +17,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: uv sync --group docs
+      - name: Build docs
+        run: mkdocs build --clean
       - name: Deploy docs
         run: mkdocs gh-deploy --force
