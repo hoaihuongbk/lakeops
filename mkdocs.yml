@@ -1,0 +1,25 @@
+site_name: LakeOps
+theme:
+  name: material
+  palette:
+    primary: blue
+  features:
+    - navigation.tabs
+    - navigation.sections
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - User Guide:
+      - Installation: guide/installation.md
+      - Basic Usage: guide/basic-usage.md
+      - Engines: guide/engines.md
+      - Formats: guide/formats.md
+  - API Reference: api.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
