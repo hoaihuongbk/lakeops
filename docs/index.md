@@ -29,5 +29,5 @@ ops = LakeOps()
 df = ops.read("path/to/table", format="delta")
 
 # Write as Iceberg
-ops.write(df, "path/to/new/table", format="iceberg")
+ops.write(df, "local.db.table", format="iceberg")
 ```
