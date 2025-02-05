@@ -26,6 +26,9 @@ nav:
       - Working With Delta Lake: guide/working_with_delta_lake.md
       - Working With Iceberg: guide/working_with_iceberg.md
   - Engines: guide/engines.md
+  - API Reference:
+      - ops.read: apis/ops.read.md
+      - ops.write: apis/ops.write.md
 
 plugins:
   - search
