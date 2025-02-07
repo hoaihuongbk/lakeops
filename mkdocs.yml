@@ -29,6 +29,7 @@ nav:
   - API Reference:
       - ops.read: apis/ops.read.md
       - ops.write: apis/ops.write.md
+      - ops.execute: apis/ops.execute.md
 
 plugins:
   - search
