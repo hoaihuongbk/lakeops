@@ -5,8 +5,8 @@ from .engines import Engine, PolarsEngine
 
 class LakeOps:
     """
-    LakeOps provides methods for user management including creation, read and write dataset from/to a datalake
-    throyght a storage path or schema/table name.
+    LakeOps provides methods for user management including creation, read and write
+    dataset from/to a datalake through a storage path or schema/table name.
     """
 
     def __init__(self, engine: Optional[Engine] = None):

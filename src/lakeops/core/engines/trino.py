@@ -1,12 +1,11 @@
-from typing import Optional, Dict, Any
-from sqlalchemy import create_engine
+from dataclasses import dataclass
+from typing import Any, Dict, Optional
+
 import polars as pl
+from sqlalchemy import create_engine
 from trino.auth import BasicAuthentication
 
 from .base import Engine
-
-from dataclasses import dataclass
-from typing import Optional
 
 
 @dataclass
