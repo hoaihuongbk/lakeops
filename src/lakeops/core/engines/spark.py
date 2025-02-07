@@ -1,4 +1,5 @@
 from typing import Any, Dict, Optional
+
 from .base import Engine
 
 
@@ -47,3 +48,6 @@ class SparkEngine(Engine):
             writer.createOrReplace()
         else:
             writer.append()
+
+    def execute(self, sql: str, **kwargs) -> Any:
+        return self.spark.sql(sql)

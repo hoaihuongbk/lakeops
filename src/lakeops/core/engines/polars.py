@@ -50,4 +50,7 @@ class PolarsEngine(Engine):
         mode: str = "overwrite",
         options: Optional[Dict[str, Any]] = None,
     ):
-        raise NotImplementedError("Polars does not support write_to_table")
+        raise NotImplementedError("PolarsEngine does not support write_to_table")
+
+    def execute(self, sql: str, **kwargs) -> Any:
+        raise NotImplementedError("PolarsEngine does not support execute SQL directly")

@@ -19,3 +19,7 @@ class Engine(ABC):
         options: Optional[Dict[str, Any]] = None,
     ) -> None:
         pass
+
+    @abstractmethod
+    def execute(self, sql: str, **kwargs) -> Any:
+        pass

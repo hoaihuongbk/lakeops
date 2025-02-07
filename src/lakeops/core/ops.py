@@ -5,8 +5,8 @@ from .engines import Engine, PolarsEngine
 
 class LakeOps:
     """
-    LakeOps provides methods for user management including creation, read and write dataset from/to a datalake
-    throyght a storage path or schema/table name.
+    LakeOps provides methods for user management including creation, read and write
+    dataset from/to a datalake through a storage path or schema/table name.
     """
 
     def __init__(self, engine: Optional[Engine] = None):
@@ -59,3 +59,16 @@ class LakeOps:
             raise ValueError("Table name must be provided for Iceberg format")
 
         return self.engine.write_table(data, path_or_table_name, format, mode, options)
+
+
+    def execute(self, sql: str, **kwargs) -> Any:
+        """Execute a SQL query and return the result.
+        Args:
+            sql: SQL query to execute
+            **kwargs: Additional arguments to pass to the underlying engine
+
+        Returns:
+            pyspark.sql.DataFrame: If using SparkEngine
+            polars.DataFrame: If using PolarsEngine (default) or TrinoEngine
+        """
+        return self.engine.execute(sql, **kwargs)

@@ -1,6 +1,6 @@
 [project]
 name = "lakeops"
-version = "0.1.3"
+version = "0.1.4"
 description = "Data lake operations toolkit"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -14,6 +14,11 @@ dependencies = [
 [project.optional-dependencies]
 spark = [
     "pyspark~=3.5.0",
+]
+
+trino = [
+    "connectorx>=0.4.1",
+    "trino[sqlalchemy]>=0.333.0",
 ]
 
 [build-system]
