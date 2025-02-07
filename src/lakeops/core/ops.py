@@ -59,3 +59,16 @@ class LakeOps:
             raise ValueError("Table name must be provided for Iceberg format")
 
         return self.engine.write_table(data, path_or_table_name, format, mode, options)
+
+
+    def execute(self, sql: str, **kwargs) -> Any:
+        """Execute a SQL query and return the result.
+        Args:
+            sql: SQL query to execute
+            **kwargs: Additional arguments to pass to the underlying engine
+
+        Returns:
+            pyspark.sql.DataFrame: If using SparkEngine
+            polars.DataFrame: If using PolarsEngine (default) or TrinoEngine
+        """
+        return self.engine.execute(sql, **kwargs)
