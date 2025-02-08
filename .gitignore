@@ -3,3 +3,5 @@
 /uv.lock
 __pycache__
 /site/
+/integration_tests/test_gsheet_integration.py
+/integration_tests/test_trino_integration.py

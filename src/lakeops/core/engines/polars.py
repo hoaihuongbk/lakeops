@@ -6,31 +6,37 @@ from .base import Engine
 
 
 class PolarsEngine(Engine):
-    def read_table(
+    def read(
         self,
-        path_or_table_name: str,
-        format: str,
+        path: str,
+        format: str = "delta",
         options: Optional[Dict[str, Any]] = None,
     ) -> Any:
+        if not self.is_storage_path(path):
+            raise ValueError("PolarsEngine only supports reading from storage path")
+
         if format == "delta":
-            return pl.read_delta(path_or_table_name, delta_table_options=options)
+            return pl.read_delta(path, delta_table_options=options)
         elif format == "parquet":
-            return pl.read_parquet(path_or_table_name)
+            return pl.read_parquet(path)
         elif format == "csv":
-            return pl.read_csv(path_or_table_name)
+            return pl.read_csv(path)
         elif format == "json":
-            return pl.read_json(path_or_table_name)
+            return pl.read_json(path)
         else:
             raise ValueError(f"Unsupported format: {format}")
 
-    def write_table(
+    def write(
         self,
         data: Any,
         path: str,
-        format: str,
+        format: str = "delta",
         mode: str = "overwrite",
         options: Optional[Dict[str, Any]] = None,
     ):
+        if not self.is_storage_path(path):
+            raise ValueError("PolarsEngine only supports writing to storage path")
+
         if format == "delta":
             data.write_delta(path, mode=mode, delta_write_options=options)
         elif format == "parquet":
@@ -41,16 +47,6 @@ class PolarsEngine(Engine):
             data.write_json(path)
         else:
             raise ValueError(f"Unsupported format: {format}")
-
-    def write_to_table(
-        self,
-        data: Any,
-        table_name: str,
-        format: str,
-        mode: str = "overwrite",
-        options: Optional[Dict[str, Any]] = None,
-    ):
-        raise NotImplementedError("PolarsEngine does not support write_to_table")
 
     def execute(self, sql: str, **kwargs) -> Any:
         raise NotImplementedError("PolarsEngine does not support execute SQL directly")

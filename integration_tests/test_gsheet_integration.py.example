@@ -1,0 +1,43 @@
+import pytest
+import polars as pl
+from lakeops.core.engines.gsheet import GoogleSheetsEngine
+
+@pytest.fixture
+def gsheet_credentials():
+    # Load your test service account credentials
+    return {
+        "type": "service_account",
+        "project_id": "your-test-project",
+        "private_key": "your-test-key",
+        "client_email": "test@your-project.iam.gserviceaccount.com",
+        # Add other required fields
+    }
+
+@pytest.fixture
+def test_sheet_url():
+    # Use a dedicated test spreadsheet URL
+    return "https://docs.google.com/spreadsheets/d/your-test-sheet-id"
+
+def test_read_write_integration(gsheet_credentials, test_sheet_url):
+    # Initialize engine
+    engine = GoogleSheetsEngine(gsheet_credentials)
+
+    # Test data
+    test_df = pl.DataFrame({
+        "id": [1, 2, 3],
+        "name": ["test1", "test2", "test3"],
+        "value": [10.5, 20.5, 30.5]
+    })
+
+    # Write test data
+    engine.write(test_df, test_sheet_url, "sheet")
+
+    # Read back and verify
+    result_df = engine.read(test_sheet_url, "sheet")
+
+    # Verify data integrity
+    assert result_df.shape == test_df.shape
+    assert result_df.columns == test_df.columns
+    assert result_df["id"].to_list() == test_df["id"].to_list()
+    assert result_df["name"].to_list() == test_df["name"].to_list()
+    assert result_df["value"].to_list() == test_df["value"].to_list()

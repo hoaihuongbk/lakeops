@@ -7,36 +7,49 @@ class SparkEngine(Engine):
     def __init__(self, spark_session):
         self.spark = spark_session
 
-    def read_table(
+    def read(
         self,
-        path_or_table_name: str,
-        format: str,
+        path: str,
+        format: str = "delta",
         options: Optional[Dict[str, Any]] = None,
     ) -> Any:
         reader = self.spark.read.format(format)
         if options:
             reader = reader.options(**options)
 
-        return reader.load(path_or_table_name)
+        ## If path is a storage path, use load, otherwise use table
+        if self.is_storage_path(path):
+            return reader.load(path)
+        else:
+            return reader.table(path)
 
-    def write_table(
+    def write(
         self,
         data: Any,
         path: str,
-        format: str,
+        format: str = "delta",
         mode: str = "overwrite",
         options: Optional[Dict[str, Any]] = None,
     ):
-        writer = data.write.format(format).mode(mode)
-        if options:
-            writer = writer.options(**options)
-        writer.save(path)
+        ## For iceberg, we need to use writeTo pyspark API
+        if format == "iceberg":
+            if self.is_storage_path(path):
+                raise ValueError("""
+                    Iceberg format does not support writing to a storage path, 
+                    please use the table name instead e.g. local.db.table_a
+                """)
+            self.write_to_table(data, path, format, mode, options)
+        else:
+            writer = data.write.format(format).mode(mode)
+            if options:
+                writer = writer.options(**options)
+            writer.save(path)
 
     def write_to_table(
         self,
         data: Any,
         table_name: str,
-        format: str,
+        format: str = "iceberg",
         mode: str = "overwrite",
         options: Optional[Dict[str, Any]] = None,
     ):

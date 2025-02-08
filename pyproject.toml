@@ -21,6 +21,10 @@ trino = [
     "trino[sqlalchemy]>=0.333.0",
 ]
 
+gsheet = [
+    "gspread>=6.1.4",
+]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

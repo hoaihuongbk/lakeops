@@ -1,0 +1,47 @@
+import pytest
+import polars as pl
+from src.lakeops.core.engines.trino import TrinoEngine
+
+@pytest.fixture
+def trino_credentials():
+    return {
+        "host": "localhost",
+        "port": 8080,
+        "user": "test_user",
+        "catalog": "test_catalog",
+        "schema": "test_schema"
+    }
+
+def test_trino_select_query(trino_credentials):
+    engine = TrinoEngine(trino_credentials)
+
+    # Test basic SELECT query
+    result_df = engine.execute("""
+        SELECT 
+            id,
+            name,
+            value
+        FROM sample_table
+        WHERE value > 10
+        ORDER BY id
+    """)
+
+    # Verify results structure
+    assert isinstance(result_df, pl.DataFrame)
+    assert 'id' in result_df.columns
+    assert 'name' in result_df.columns
+    assert 'value' in result_df.columns
+
+    # Test aggregation SELECT query
+    agg_result = engine.execute("""
+        SELECT 
+            COUNT(*) as count,
+            SUM(value) as total,
+            AVG(value) as average
+        FROM sample_table
+    """)
+
+    assert isinstance(agg_result, pl.DataFrame)
+    assert 'count' in agg_result.columns
+    assert 'total' in agg_result.columns
+    assert 'average' in agg_result.columns
