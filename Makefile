@@ -10,7 +10,11 @@ build:
 
 test:
 	@echo "Running tests"
-	@uv run pytest tests/ -v -s --log-cli-level=INFO
+	@uv run pytest tests/*.py -v -s --log-cli-level=INFO
+
+integration_test:
+	@echo "Running integration tests"
+	@uv run pytest integration_tests/*.py -v --log-cli-level=INFO
 
 lint:
 	@echo "Linting the project"

@@ -14,14 +14,14 @@ class LakeOps:
 
     def read(
         self,
-        path_or_table_name: str,
+        path: str,
         format: str = "delta",
         options: Optional[Dict[str, Any]] = None,
     ) -> Any:
         """Read a table from a storage path or schema/table name.
 
         Args:
-            path_or_table_name: Storage path or schema/table name to read from
+            path: Storage path or schema/table name or Google Sheet ID to read from
             format: Table format (default: 'delta')
             options: Additional options to pass to the underlying engine
 
@@ -29,11 +29,12 @@ class LakeOps:
             pyspark.sql.DataFrame: If using SparkEngine
             polars.DataFrame: If using PolarsEngine (default)
         """
-        return self.engine.read_table(path_or_table_name, format, options)
+        return self.engine.read(path, format, options)
+
     def write(
         self,
         data: Any,
-        path_or_table_name: str,
+        path: str,
         format: str = "delta",
         mode: str = "overwrite",
         options: Optional[Dict[str, Any]] = None,
@@ -42,7 +43,7 @@ class LakeOps:
 
         Args:
             data: Data to write (DataFrame)
-            path_or_table_name: Storage path or schema/table name to write to
+            path: Storage path or schema/table name or Google Sheet ID to write to
             format: Table format (default: 'delta')
             mode: Write mode - 'overwrite', 'append', etc. (default: 'overwrite')
             options: Additional options to pass to the underlying engine
@@ -50,19 +51,11 @@ class LakeOps:
         Returns:
             None
         """
-        if "/" not in path_or_table_name:
-            return self.engine.write_to_table(
-                data, path_or_table_name, format, mode, options
-            )
-
-        if format == "iceberg":
-            raise ValueError("Table name must be provided for Iceberg format")
-
-        return self.engine.write_table(data, path_or_table_name, format, mode, options)
-
+        return self.engine.write(data, path, format, mode, options)
 
     def execute(self, sql: str, **kwargs) -> Any:
         """Execute a SQL query and return the result.
+
         Args:
             sql: SQL query to execute
             **kwargs: Additional arguments to pass to the underlying engine

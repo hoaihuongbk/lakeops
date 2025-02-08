@@ -4,17 +4,17 @@ from typing import Any, Dict, Optional
 
 class Engine(ABC):
     @abstractmethod
-    def read_table(
-        self, path: str, format: str, options: Optional[Dict[str, Any]] = None
+    def read(
+        self, path: str, format: str = "delta", options: Optional[Dict[str, Any]] = None
     ) -> Any:
         pass
 
     @abstractmethod
-    def write_table(
+    def write(
         self,
         data: Any,
         path: str,
-        format: str,
+        format: str = "delta",
         mode: str = "overwrite",
         options: Optional[Dict[str, Any]] = None,
     ) -> None:
@@ -23,3 +23,7 @@ class Engine(ABC):
     @abstractmethod
     def execute(self, sql: str, **kwargs) -> Any:
         pass
+
+    def is_storage_path(self, path: str) -> bool:
+        ## If path contains a slash, it's a storage path
+        return "/" in path

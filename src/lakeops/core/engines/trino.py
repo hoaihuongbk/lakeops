@@ -39,20 +39,27 @@ class TrinoEngine(Engine):
     def __init__(self, config: TrinoEngineConfig):
         self.connection = config.connection.connect()
 
-    def read_table(
-        self, path: str, format: str, options: Optional[Dict[str, Any]] = None
+    def read(
+        self, path: str, format: str = "delta", options: Optional[Dict[str, Any]] = None
     ) -> Any:
         raise NotImplementedError("TrinoEngine does not support read_table")
 
-    def write_table(
+    def write(
         self,
         data: Any,
         path: str,
-        format: str,
+        format: str = "delta",
         mode: str = "overwrite",
         options: Optional[Dict[str, Any]] = None,
     ) -> None:
         raise NotImplementedError("TrinoEngine does not support write_table")
 
+    def is_select_query(self, sql: str) -> bool:
+        # Remove leading/trailing whitespace and get first word
+        first_word = sql.strip().split()[0].upper()
+        return first_word == "SELECT"
+
     def execute(self, sql: str, **kwargs) -> Any:
+        if not self.is_select_query(sql):
+            raise ValueError("TrinoEngine only supports SELECT queries")
         return pl.read_database(query=sql, connection=self.connection, **kwargs)
