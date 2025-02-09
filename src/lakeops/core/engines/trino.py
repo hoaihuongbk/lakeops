@@ -14,6 +14,7 @@ class TrinoEngineConfig:
     catalog: str
     schema: str
     password: Optional[str] = None
+    protocol: str = "https"
 
     @property
     def connection(self):
@@ -30,7 +31,7 @@ class TrinoEngineConfig:
             f"trino://{self.user}@{self.host}:{self.port}/{self.catalog}/{self.schema}",
             connect_args={
                 "auth": auth,
-                "http_scheme": "https",
+                "http_scheme": self.protocol,
             },
         )
 
