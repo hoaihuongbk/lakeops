@@ -1,6 +1,5 @@
 from typing import Any, Dict, Optional
 
-import gspread
 import polars as pl
 
 from .base import Engine
@@ -8,6 +7,8 @@ from .base import Engine
 
 class GoogleSheetsEngine(Engine):
     def __init__(self, credentials: Dict[str, Any]):
+        import gspread
+
         self.gc = gspread.service_account_from_dict(credentials)
 
     def read(
