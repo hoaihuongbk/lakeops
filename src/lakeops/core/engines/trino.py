@@ -2,8 +2,6 @@ from dataclasses import dataclass
 from typing import Any, Dict, Optional
 
 import polars as pl
-from sqlalchemy import create_engine
-from trino.auth import BasicAuthentication
 
 from .base import Engine
 
@@ -21,6 +19,8 @@ class TrinoEngineConfig:
     def connection(self):
         # https://sfu-db.github.io/connector-x/databases/trino.html
         # https://github.com/trinodb/trino-python-client
+        from sqlalchemy import create_engine
+        from trino.auth import BasicAuthentication
 
         auth = None
         if self.password:
