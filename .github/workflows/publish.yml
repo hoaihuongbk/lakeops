@@ -62,6 +62,7 @@ jobs:
     permissions:
       # IMPORTANT: this permission is mandatory for Trusted Publishing
       id-token: write
+      attestations: write
     needs: [build-wheels]
     steps:
       - uses: actions/download-artifact@v4
