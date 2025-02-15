@@ -55,20 +55,20 @@ jobs:
           name: wheels-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
           path: dist/*.whl
 
-#  release:
-#    runs-on: ubuntu-latest
-#    # Specifying a GitHub environment is optional, but strongly encouraged
-#    environment: pypi
-#    permissions:
-#      # IMPORTANT: this permission is mandatory for Trusted Publishing
-#      id-token: write
-#    needs: [build-wheels]
-#    steps:
-#      - uses: actions/download-artifact@v4
-#      - name: Generate artifact attestation
-#        uses: actions/attest-build-provenance@v1
-#        with:
-#          subject-path: 'wheels-*/*'
-#
+  release:
+    runs-on: ubuntu-latest
+    # Specifying a GitHub environment is optional, but strongly encouraged
+    environment: pypi
+    permissions:
+      # IMPORTANT: this permission is mandatory for Trusted Publishing
+      id-token: write
+    needs: [build-wheels]
+    steps:
+      - uses: actions/download-artifact@v4
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: 'wheels-*/*'
+
 #      - name: Publish to PyPI
 #        uses: pypa/gh-action-pypi-publish@release/v1
