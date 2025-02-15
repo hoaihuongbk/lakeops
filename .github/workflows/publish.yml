@@ -28,10 +28,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-#      - uses: actions/setup-python@v5
-#        if: matrix.os == 'macos-latest'
-#        with:
-#          python-version: ${{ matrix.python-version }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
       - name: Setup QEMU
         if: matrix.os == 'ubuntu-latest'
@@ -43,6 +42,11 @@ jobs:
           command: build
           target: ${{ matrix.architecture }}
           args: --release --out dist -i python${{ matrix.python-version }}
+
+      - name: Test wheel
+        run: |
+          pip install --force-reinstall --verbose dist/*.whl
+          python -c 'from lakeops import LakeOps; from lakeops.udf import point_in_polygon'
 
       - name: Upload wheel
         uses: actions/upload-artifact@v4
