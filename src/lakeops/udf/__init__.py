@@ -1,4 +1,4 @@
-from lakeops.udf.lakeops_udf import (
+from lakeops._lakeops_udf import (
     point_in_polygon,
     calculate_distance,
     json_extract,

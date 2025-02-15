@@ -4,6 +4,23 @@ version = "0.1.7"
 description = "Data lake operations toolkit"
 readme = "README.md"
 requires-python = ">=3.10"
+authors = [
+    { name = "Huong Vuong", email = "hoaihuongvuonghuynh@gmail.com" },
+]
+license = { file = "LICENSE" }
+classifiers = [
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Rust",
+    "Topic :: Scientific/Engineering",
+    "Typing :: Typed",
+]
+
 dependencies = [
     "deltalake>=0.24.0",
     "pandas>=2.2.3",
@@ -53,9 +70,9 @@ target-version = "py310"
 
 [tool.ruff.lint]
 select = [
-    "E",  # pycodestyle
-    "F",  # pyflakes
-    "I",  # isort
+    "E", # pycodestyle
+    "F", # pyflakes
+    "I", # isort
 ]
 
 [tool.ruff.format]
@@ -65,7 +82,8 @@ skip-magic-trailing-comma = false
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
-module-name = "lakeops.udf.lakeops_udf"
+module-name = "lakeops._lakeops_udf"
 python-source = "src"
-manifest-path = "src/lakeops/udf/rust/Cargo.toml"
+manifest-path = "rust/Cargo.toml"
+compatibility = "manylinux2014"
 
