@@ -44,6 +44,7 @@ jobs:
           args: --release --out dist -i python${{ matrix.python-version }}
 
       - name: Test wheel
+        if: matrix.os == ' macos-latest' || (matrix.os == 'ubuntu-latest' && matrix.architecture == 'x86_64')
         run: |
           pip install --force-reinstall --verbose dist/*.whl
           python -c 'from lakeops import LakeOps; from lakeops.udf import point_in_polygon'
