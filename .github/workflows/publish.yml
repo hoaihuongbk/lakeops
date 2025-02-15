@@ -10,11 +10,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-22.04, macos-14 ]
+        os: [ ubuntu-latest, macos-latest ]
         architecture: [ x86-64, aarch64 ]
         python-version: [ '3.10']
         exclude:
-          - os: macos-14
+          - os: macos-latest
             architecture: x86-64
 
     steps:
@@ -22,20 +22,24 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.platform.python-version }}
-          architecture: ${{ matrix.platform.architecture }}
+          python-version: ${{ matrix.python-version }}
+          architecture: ${{ matrix.architecture }}
+
+      - name: Setup QEMU
+        if: matrix.os == 'ubuntu-latest' && matrix.architecture == 'aarch64'
+        uses: docker/setup-qemu-action@v2
 
       - name: Build wheel
         uses: PyO3/maturin-action@v1
         with:
           command: build
-          target: ${{ matrix.platform.architecture }}
-          args: --release --out dist --find-interpreter
+          target: ${{ matrix.architecture }}
+          args: --release --out dist -i python${{ matrix.python-version }}
 
       - name: Upload wheel
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-${{ matrix.os }}-${{ matrix.platform.architecture }}
+          name: wheels-${{ matrix.os }}-${{ matrix.architecture }}
           path: dist/*.whl
 
   release:
