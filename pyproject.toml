@@ -26,8 +26,8 @@ gsheet = [
 ]
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["maturin>=1.0,<2.0", "hatchling"]
+build-backend = "maturin"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -61,4 +61,10 @@ select = [
 quote-style = "double"
 indent-style = "space"
 skip-magic-trailing-comma = false
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+module-name = "lakeops.udf.lakeops_udf"
+python-source = "src"
+manifest-path = "src/lakeops/udf/rust/Cargo.toml"
 

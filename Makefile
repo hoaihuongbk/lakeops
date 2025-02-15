@@ -6,7 +6,8 @@ setup:
 
 build:
 	@echo "Building the project"
-	@uv build --wheel
+	#@uv build --wheel
+	@uv tool run maturin develop
 
 test:
 	@echo "Running tests"
