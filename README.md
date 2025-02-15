@@ -43,4 +43,3 @@ df = ops.read("s3://local/test/table", format="parquet")
 ops.write(df, "s3://local/test/table", format="parquet")
 
 ```
-
