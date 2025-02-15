@@ -10,46 +10,36 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
+        os: [ ubuntu-22.04, macos-14 ]
         architecture: [ x86-64, aarch64 ]
         python-version: [ '3.10']
         exclude:
-          - os: macos-latest
+          - os: macos-14
             architecture: x86-64
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install uv and set the python version
-        uses: astral-sh/setup-uv@v5
+      - uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Set Rust target for aarch64
-        if: matrix.architecture == 'aarch64'
-        id: target
-        run: |
-          TARGET=$(
-            if [[ "${{ matrix.os }}" == "macos-latest" ]]; then
-              echo "aarch64-apple-darwin";
-            else
-              echo "aarch64-unknown-linux-gnu";
-            fi
-          )
-          echo "target=$TARGET" >> $GITHUB_OUTPUT
+          python-version: ${{ matrix.platform.python-version }}
+          architecture: ${{ matrix.platform.architecture }}
 
       - name: Build wheel
         uses: PyO3/maturin-action@v1
         with:
           command: build
-          target: ${{ steps.target.outputs.target }}
+          target: ${{ matrix.platform.architecture }}
           args: >
+            --release
             --out dist
-          manylinux: ${{ matrix.architecture == 'aarch64' && '2_24' || 'auto' }}
+             --find-interpreter
+            -i python${{ matrix.python-version }}
 
       - name: Upload wheel
         uses: actions/upload-artifact@v4
         with:
+          name: wheels-${{ matrix.os }}-${{ matrix.platform.architecture }}
           path: dist/*.whl
 
   release:
@@ -61,11 +51,11 @@ jobs:
       id-token: write
     needs: [build-wheels]
     steps:
-      - name: Download wheels
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v1
         with:
-          path: dist
-          merge-multiple: true
+          subject-path: 'wheels-*/*'
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
