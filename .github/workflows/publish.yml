@@ -1,12 +1,6 @@
 name: Publish to PyPI
 
 on:
-  workflow_call:
-    inputs:
-      python-version:
-        required: false
-        type: string
-        default: "3.10"
   release:
     types: [ created ]
 
