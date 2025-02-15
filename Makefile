@@ -24,3 +24,7 @@ test_docs:
 	@echo "Generating documentation"
 	@uv run mkdocs build --clean
 	@uv run mkdocs serve
+
+build_wheel:
+	@echo "Releasing the project"
+	@uv tool run maturin build
