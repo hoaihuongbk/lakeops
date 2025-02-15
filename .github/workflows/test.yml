@@ -33,20 +33,16 @@ jobs:
         with:
           python-version: ${{ inputs.python-version }}
 
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          target: ${{ matrix.target }}
-
       - name: Install uv
         run: curl -LsSf https://astral.sh/uv/install.sh | sh
 
       - name: Install dependencies
         run: uv sync --all-extras --group dev
 
-      - uses: PyO3/maturin-action@v1
-        with:
-          target: ${{ matrix.target }}
-          manylinux: auto
+#      - uses: PyO3/maturin-action@v1
+#        with:
+#          target: ${{ matrix.target }}
+#          manylinux: auto
 
       - name: Run tests
         run: uv run pytest tests/ -v
