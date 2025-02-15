@@ -85,5 +85,4 @@ features = ["pyo3/extension-module"]
 module-name = "lakeops._lakeops_udf"
 python-source = "src"
 manifest-path = "rust/Cargo.toml"
-compatibility = "manylinux2014"
 
