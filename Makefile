@@ -10,7 +10,7 @@ build:
 
 test:
 	@echo "Running tests"
-	@uv run pytest tests/*.py -v -s --log-cli-level=INFO
+	@uv run pytest tests/*.py -v -s --log-cli-level=INFO --cov=lakeops --cov-report=xml
 
 integration_test:
 	@echo "Running integration tests"

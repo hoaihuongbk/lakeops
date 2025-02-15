@@ -8,3 +8,5 @@ __pycache__
 /src/lakeops/udf/rust/target/
 /src/lakeops/udf/rust/Cargo.lock
 /src/lakeops/udf/lakeops_udf.cpython-310-darwin.so
+/.coverage
+/coverage.xml
