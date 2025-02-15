@@ -16,12 +16,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
         architecture: [ x86_64, aarch64 ]
         python-version: [ '3.10']
         exclude:
           - os: macos-latest
             architecture: x86_64
+          - os: windows-latest
+            architecture: aarch64
 
     steps:
       - uses: actions/checkout@v4
@@ -45,7 +47,6 @@ jobs:
       - name: Upload wheel
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-${{ matrix.os }}-${{ matrix.architecture }}
           path: dist/*.whl
 
 #  release:
