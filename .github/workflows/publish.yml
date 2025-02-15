@@ -1,14 +1,8 @@
 name: Publish to PyPI
 
 on:
-#  release:
-#    types: [ created ]
-
-  pull_request:
-    branches: [ main ]
-    paths:
-      - 'src/lakeops/**'
-      - '.github/workflows/publish.yml'
+  release:
+    types: [ created ]
 
 jobs:
   build-wheels:
