@@ -5,3 +5,6 @@ __pycache__
 /site/
 /integration_tests/test_gsheet_integration.py
 /integration_tests/test_trino_integration.py
+/src/lakeops/udf/rust/target/
+/src/lakeops/udf/rust/Cargo.lock
+/src/lakeops/udf/lakeops_udf.cpython-310-darwin.so
