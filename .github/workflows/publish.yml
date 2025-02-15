@@ -1,8 +1,14 @@
 name: Publish to PyPI
 
 on:
-  release:
-    types: [ created ]
+#  release:
+#    types: [ created ]
+
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'src/lakeops/**'
+      - '.github/workflows/publish.yml'
 
 jobs:
   build-wheels:
@@ -14,7 +20,7 @@ jobs:
         architecture: [ x86-64, aarch64 ]
         python-version: [ '3.10']
         exclude:
-          - os: macos-latest
+          - os: macos-14
             architecture: x86-64
 
     steps:
@@ -23,7 +29,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.architecture }}
 
       - name: Setup QEMU
         if: matrix.os == 'ubuntu-latest' && matrix.architecture == 'aarch64'
@@ -42,20 +47,20 @@ jobs:
           name: wheels-${{ matrix.os }}-${{ matrix.architecture }}
           path: dist/*.whl
 
-  release:
-    runs-on: ubuntu-latest
-    # Specifying a GitHub environment is optional, but strongly encouraged
-    environment: pypi
-    permissions:
-      # IMPORTANT: this permission is mandatory for Trusted Publishing
-      id-token: write
-    needs: [build-wheels]
-    steps:
-      - uses: actions/download-artifact@v4
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v1
-        with:
-          subject-path: 'wheels-*/*'
-
-      - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+#  release:
+#    runs-on: ubuntu-latest
+#    # Specifying a GitHub environment is optional, but strongly encouraged
+#    environment: pypi
+#    permissions:
+#      # IMPORTANT: this permission is mandatory for Trusted Publishing
+#      id-token: write
+#    needs: [build-wheels]
+#    steps:
+#      - uses: actions/download-artifact@v4
+#      - name: Generate artifact attestation
+#        uses: actions/attest-build-provenance@v1
+#        with:
+#          subject-path: 'wheels-*/*'
+#
+#      - name: Publish to PyPI
+#        uses: pypa/gh-action-pypi-publish@release/v1
