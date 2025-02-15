@@ -4,6 +4,11 @@ on:
   release:
     types: [ created ]
 
+#  pull_request:
+#    branches: [ main ]
+#    paths:
+#      - '.github/workflows/publish.yml'
+
 jobs:
   build-wheels:
     runs-on: ${{ matrix.os }}
@@ -60,10 +65,9 @@ jobs:
     needs: [build-wheels]
     steps:
       - uses: actions/download-artifact@v4
-      - name: Generate artifact attestation
-        uses: actions/attest-build-provenance@v1
         with:
-          subject-path: 'wheels-*/*'
+          path: dist
+          merge-multiple: true
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
