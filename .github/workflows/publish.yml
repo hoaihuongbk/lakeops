@@ -1,13 +1,13 @@
 name: Publish to PyPI
 
 on:
-#  release:
-#    types: [ created ]
+  release:
+    types: [ created ]
 
-  pull_request:
-    branches: [ main ]
-    paths:
-      - '.github/workflows/publish.yml'
+#  pull_request:
+#    branches: [ main ]
+#    paths:
+#      - '.github/workflows/publish.yml'
 
 jobs:
   build-wheels:
@@ -68,16 +68,6 @@ jobs:
         with:
           path: dist
           merge-multiple: true
-#      - name: Generate artifact attestation
-#        uses: actions/attest-build-provenance@v1
-#        with:
-#          subject-path: 'wheels-*/*'
 
-      - name: Move wheels to dist directory
-        run: |
-          echo "Contents of dist directory:"
-          ls -la dist/
-
-
-#      - name: Publish to PyPI
-#        uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
