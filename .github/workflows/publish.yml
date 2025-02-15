@@ -10,12 +10,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest, macos-latest ]
-        architecture: [ x86-64, aarch64 ]
+        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        architecture: [ x86_64, aarch64 ]
         python-version: [ '3.10']
         exclude:
           - os: macos-latest
-            architecture: x86-64
+            architecture: x86_64
+          - os: windows-latest
+            architecture: aarch64
 
     steps:
       - uses: actions/checkout@v4
@@ -23,10 +25,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          architecture: ${{ matrix.architecture }}
 
       - name: Setup QEMU
-        if: matrix.os == 'ubuntu-latest' && matrix.architecture == 'aarch64'
+        if: matrix.os == 'ubuntu-latest'
         uses: docker/setup-qemu-action@v2
 
       - name: Build wheel
@@ -36,10 +37,16 @@ jobs:
           target: ${{ matrix.architecture }}
           args: --release --out dist -i python${{ matrix.python-version }}
 
+      - name: Test wheel
+        if: matrix.os == ' macos-latest' || (matrix.os == 'ubuntu-latest' && matrix.architecture == 'x86_64')
+        run: |
+          pip install --force-reinstall --verbose dist/*.whl
+          python -c 'from lakeops import LakeOps; from lakeops.udf import point_in_polygon'
+
       - name: Upload wheel
         uses: actions/upload-artifact@v4
         with:
-          name: wheels-${{ matrix.os }}-${{ matrix.architecture }}
+          name: wheels-${{ matrix.os }}-${{ matrix.architecture }}-${{ matrix.python-version }}
           path: dist/*.whl
 
   release:
@@ -49,6 +56,7 @@ jobs:
     permissions:
       # IMPORTANT: this permission is mandatory for Trusted Publishing
       id-token: write
+      attestations: write
     needs: [build-wheels]
     steps:
       - uses: actions/download-artifact@v4
