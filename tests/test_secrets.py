@@ -15,7 +15,7 @@ def secret_manager(tmp_path):
 def test_write_and_read_secret(secret_manager):
     logger.info("Testing write and read secret")
     secret_manager.write("test_key", "test_secret_value")
-    value = secret_manager.read("test_key", show_redacted=False)
+    value = secret_manager.read("test_key", redacted=False)
     assert value == "test_secret_value"
 
 def test_read_redacted_secret(secret_manager):
@@ -33,5 +33,5 @@ def test_update_existing_secret(secret_manager):
     logger.info("Testing secret update")
     secret_manager.write("update_key", "initial_value")
     secret_manager.write("update_key", "updated_value")
-    value = secret_manager.read("update_key", show_redacted=False)
+    value = secret_manager.read("update_key", redacted=False)
     assert value == "updated_value"

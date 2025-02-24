@@ -46,7 +46,7 @@ def test_write_and_read_secret(mock_workspace_client, databricks_secret_manager)
 
     # Read and verify value
     value = databricks_secret_manager.read(
-        "test_read_key", scope="test_scope", show_redacted=False
+        "test_read_key", scope="test_scope", redacted=False
     )
     # Verify read calls
     mock_workspace_client.secrets.get_secret.assert_called_once_with(

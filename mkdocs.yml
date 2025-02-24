@@ -25,11 +25,15 @@ nav:
   - User Guide:
       - Working With Delta Lake: guide/working_with_delta_lake.md
       - Working With Iceberg: guide/working_with_iceberg.md
+      - Working With Google Sheets: guide/working_with_google_sheets.md
+      - Working With Secrets: guide/working_with_secrets.md
   - Engines: guide/engines.md
   - API Reference:
       - ops.read: apis/ops.read.md
       - ops.write: apis/ops.write.md
       - ops.execute: apis/ops.execute.md
+      - secrets.read: apis/secrets.read.md
+      - secrets.write: apis/secrets.write.md
 
 plugins:
   - search

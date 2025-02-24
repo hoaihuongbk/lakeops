@@ -23,10 +23,10 @@ class DatabricksSecretManager(SecretManager):
         self.secrets.put_secret(scope=scope, key=key, string_value=value)
 
     def read(
-        self, key: str, scope: Optional[str] = None, show_redacted: bool = True
+        self, key: str, scope: Optional[str] = None, redacted: bool = True
     ) -> str:
         if not scope:
             raise ValueError("Scope is required for Databricks secrets")
 
         value = self.secrets.get_secret(scope=scope, key=key).value
-        return redact_secret(value) if show_redacted else value
+        return redact_secret(value) if redacted else value

@@ -42,7 +42,7 @@ class SQLiteSecretManager(SecretManager):
             conn.commit()
 
     def read(
-        self, key: str, scope: Optional[str] = None, show_redacted: bool = True
+        self, key: str, scope: Optional[str] = None, redacted: bool = True
     ) -> str:
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.execute("SELECT value FROM secrets WHERE key = ?", (key,))
@@ -51,4 +51,4 @@ class SQLiteSecretManager(SecretManager):
                 raise KeyError(f"Secret not found: {key}")
 
             decrypted_value = self._decrypt(result[0])
-            return redact_secret(decrypted_value) if show_redacted else decrypted_value
+            return redact_secret(decrypted_value) if redacted else decrypted_value
