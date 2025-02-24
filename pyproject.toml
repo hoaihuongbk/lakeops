@@ -22,6 +22,8 @@ classifiers = [
 ]
 
 dependencies = [
+    "cryptography>=44.0.1",
+    "databricks-sdk>=0.44.1",
     "deltalake>=0.24.0",
     "pandas>=2.2.3",
     "polars>=1.21.0",
