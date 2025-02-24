@@ -9,9 +9,10 @@ A modern data lake operations toolkit working with multiple table formats (Delta
 (Spark, Polars) via the same APIs.
 
 ## Features
-- Multi-format support: Delta, Iceberg, Parquet
-- Multiple engine backends: Apache Spark, Polars (default)
-- Storage operations: read, write
+- Multi-format support: Delta, Iceberg, Parquet, JSON, CSV
+- Multiple engine backends: Polars, Apache Spark, Trino, Google Sheets
+- Storage operations: read, write, execute SQL query
+- Secrets management: local (SQLLite), Databricks
 
 ## Installation
 ```bash
