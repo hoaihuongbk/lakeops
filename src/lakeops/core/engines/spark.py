@@ -39,6 +39,9 @@ class SparkEngine(Engine):
                     please use the table name instead e.g. local.db.table_a
                 """)
             self.write_to_table(data, path, format, mode, options)
+        elif not self.is_storage_path(path):
+            # Incase the path is a schema/table name, we need to use writeTo pyspark API
+            self.write_to_table(data, path, format, mode, options)
         else:
             writer = data.write.format(format).mode(mode)
             if options:
