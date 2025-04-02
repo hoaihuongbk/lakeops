@@ -8,7 +8,7 @@ name = "lakeops_udf"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = { version = "0.19", features = ["extension-module"] }
+pyo3 = { version = "0.24", features = ["extension-module"] }
 geo = "0.26.0"
 geojson = "0.24.0"
 geohash = "0.13.0"
