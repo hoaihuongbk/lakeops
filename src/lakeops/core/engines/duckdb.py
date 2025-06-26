@@ -1,9 +1,12 @@
 from typing import Any, Dict, Optional
+
 from .base import Engine
+
 
 class DuckDBEngine(Engine):
     def __init__(self, path: str = ":memory:"):
         import duckdb
+
         self.duckdb = duckdb
         self.conn = duckdb.connect(path)
 

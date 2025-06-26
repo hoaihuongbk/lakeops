@@ -90,4 +90,3 @@ def test_geohash():
     # Test relative difference
     assert abs(decoded_lat - lat) / lat < 0.01  # 1% tolerance
     assert abs(decoded_lon - lon) / abs(lon) < 0.01  # 1% tolerance
-

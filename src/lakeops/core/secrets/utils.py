@@ -1,5 +1,6 @@
 from typing import Optional
 
+
 def redact_secret(value: str, show_chars: Optional[int] = 4) -> str:
     """Redact a secret value, optionally showing last N characters
     Example: "supersecrettoken" -> "********token"

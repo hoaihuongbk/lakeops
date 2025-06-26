@@ -1,9 +1,11 @@
 import sqlite3
 from pathlib import Path
+from typing import Optional
+
 from cryptography.fernet import Fernet
+
 from .interface import SecretManager
 from .utils import redact_secret
-from typing import Optional
 
 
 class SQLiteSecretManager(SecretManager):
@@ -41,9 +43,7 @@ class SQLiteSecretManager(SecretManager):
             )
             conn.commit()
 
-    def read(
-        self, key: str, scope: Optional[str] = None, redacted: bool = True
-    ) -> str:
+    def read(self, key: str, scope: Optional[str] = None, redacted: bool = True) -> str:
         with sqlite3.connect(self.db_path) as conn:
             cursor = conn.execute("SELECT value FROM secrets WHERE key = ?", (key,))
             result = cursor.fetchone()

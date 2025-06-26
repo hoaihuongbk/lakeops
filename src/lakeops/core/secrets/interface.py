@@ -4,9 +4,7 @@ from typing import Optional
 
 class SecretManager(ABC):
     @abstractmethod
-    def write(
-        self, key: str, value: str, scope: Optional[str] = None
-    ) -> None:
+    def write(self, key: str, value: str, scope: Optional[str] = None) -> None:
         """Write a secret value for the given key and optional scope
 
         Args:
@@ -19,10 +17,9 @@ class SecretManager(ABC):
         """
 
         pass
+
     @abstractmethod
-    def read(
-        self, key: str, scope: Optional[str] = None, redacted: bool = True
-    ) -> str:
+    def read(self, key: str, scope: Optional[str] = None, redacted: bool = True) -> str:
         """Read a secret value for the given key and optional scope
 
         Args:

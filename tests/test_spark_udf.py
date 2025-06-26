@@ -1,7 +1,14 @@
 import pytest
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import udf
-from pyspark.sql.types import BooleanType, DoubleType, StringType, ArrayType, StructType, StructField
+from pyspark.sql.types import (
+    BooleanType,
+    DoubleType,
+    StringType,
+    ArrayType,
+    StructType,
+    StructField,
+)
 from lakeops.udf import (
     point_in_polygon,
     calculate_distance,
@@ -12,7 +19,6 @@ from lakeops.udf import (
 )
 
 
-
 def register_udfs(spark):
     # Create PySpark UDFs
     point_in_polygon_udf = udf(point_in_polygon, BooleanType())
@@ -21,10 +27,12 @@ def register_udfs(spark):
     is_valid_json_udf = udf(is_valid_json, BooleanType())
     encode_geohash_udf = udf(encode_geohash, StringType())
 
-    location_type = StructType([
-        StructField("lat", DoubleType(), False),
-        StructField("lon", DoubleType(), False)
-    ])
+    location_type = StructType(
+        [
+            StructField("lat", DoubleType(), False),
+            StructField("lon", DoubleType(), False),
+        ]
+    )
     decode_geohash_udf = udf(lambda x: list(decode_geohash(x)), location_type)
 
     # Register with Spark
@@ -34,6 +42,7 @@ def register_udfs(spark):
     spark.udf.register("is_valid_json", is_valid_json_udf)
     spark.udf.register("encode_geohash", encode_geohash_udf)
     spark.udf.register("decode_geohash", decode_geohash_udf)
+
 
 @pytest.fixture(scope="module")
 def spark():

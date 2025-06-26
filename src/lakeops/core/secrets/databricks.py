@@ -1,7 +1,9 @@
-from .interface import SecretManager
-from databricks.sdk import WorkspaceClient
-from .utils import redact_secret
 from typing import Optional
+
+from databricks.sdk import WorkspaceClient
+
+from .interface import SecretManager
+from .utils import redact_secret
 
 
 class DatabricksSecretManager(SecretManager):
@@ -22,9 +24,7 @@ class DatabricksSecretManager(SecretManager):
 
         self.secrets.put_secret(scope=scope, key=key, string_value=value)
 
-    def read(
-        self, key: str, scope: Optional[str] = None, redacted: bool = True
-    ) -> str:
+    def read(self, key: str, scope: Optional[str] = None, redacted: bool = True) -> str:
         if not scope:
             raise ValueError("Scope is required for Databricks secrets")
 
