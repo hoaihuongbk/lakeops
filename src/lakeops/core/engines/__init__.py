@@ -5,7 +5,6 @@ from .polars import PolarsEngine
 from .spark import SparkEngine
 from .spark_connect import SparkConnectEngine
 from .trino import TrinoEngine, TrinoEngineConfig
-from .databricks_spark_connect import DatabricksSparkConnectEngine
 
 __all__ = [
     "Engine",
@@ -16,5 +15,4 @@ __all__ = [
     "GoogleSheetsEngine",
     "DuckDBEngine",
     "SparkConnectEngine",
-    "DatabricksSparkConnectEngine",
 ]

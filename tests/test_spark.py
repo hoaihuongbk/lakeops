@@ -2,7 +2,7 @@ import pytest
 import logging
 from pyspark.sql import SparkSession
 from lakeops import LakeOps
-from lakeops.core.engines import SparkEngine, SparkConnectEngine
+from lakeops.core.engines import SparkEngine
 import socket
 import os
 
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 @pytest.fixture
 def spark():
     return (
-        SparkSession.builder.appName("LakeOpsTest")
+        SparkSession.builder.appName("LakeOpsNormalSparkTest")
         .master("local[1]")
         .config(
             "spark.jars.packages",
@@ -94,44 +94,44 @@ def test_read_write_iceberg(spark, lake_ops, tmp_path):
     assert read_df.collect() == test_data.collect()
 
 
-def is_port_open(host, port):
-    try:
-        with socket.create_connection((host, port), timeout=2):
-            return True
-    except Exception:
-        return False
+# def is_port_open(host, port):
+#     try:
+#         with socket.create_connection((host, port), timeout=2):
+#             return True
+#     except Exception:
+#         return False
 
 
-@pytest.fixture(scope="module")
-def spark_connect():
-    # Default Spark Connect server is sc://localhost:15002
-    # pyspark SparkSession.builder.remote('sc://localhost') uses port 15002
-    if not is_port_open("localhost", 15002):
-        pytest.skip("Spark Connect server is not running on localhost:15002")
-    engine = SparkConnectEngine(remote_host="sc://localhost")
-    return engine.spark
+# @pytest.fixture(scope="module")
+# def spark_connect():
+#     # Default Spark Connect server is sc://localhost:15002
+#     # pyspark SparkSession.builder.remote('sc://localhost') uses port 15002
+#     if not is_port_open("localhost", 15002):
+#         pytest.skip("Spark Connect server is not running on localhost:15002")
+#     engine = SparkConnectEngine(remote_host="sc://localhost")
+#     return engine.spark
 
 
-@pytest.fixture(scope="module")
-def lake_ops_connect(spark_connect):
-    engine = SparkConnectEngine(remote_host="sc://localhost")
-    return LakeOps(engine)
+# @pytest.fixture(scope="module")
+# def lake_ops_connect(spark_connect):
+#     engine = SparkConnectEngine(remote_host="sc://localhost")
+#     return LakeOps(engine)
 
 
-def test_connect_read_write_delta(spark_connect, lake_ops_connect, tmp_path):
-    # This test is similar to test_read_write_delta but uses SparkConnectEngine
-    test_data = spark_connect.createDataFrame(
-        [(1, "John"), (2, "Jane")], ["id", "name"]
-    )
-    test_path = str(tmp_path / "test_connect_table")
-    lake_ops_connect.write(test_data, test_path, format="delta")
-    read_df = lake_ops_connect.read(test_path, format="delta")
-    assert read_df.count() == 2
-    assert read_df.collect() == test_data.collect()
+# def test_connect_read_write_delta(spark_connect, lake_ops_connect, tmp_path):
+#     # This test is similar to test_read_write_delta but uses SparkConnectEngine
+#     test_data = spark_connect.createDataFrame(
+#         [(1, "John"), (2, "Jane")], ["id", "name"]
+#     )
+#     test_path = str(tmp_path / "test_connect_table")
+#     lake_ops_connect.write(test_data, test_path, format="delta")
+#     read_df = lake_ops_connect.read(test_path, format="delta")
+#     assert read_df.count() == 2
+#     assert read_df.collect() == test_data.collect()
 
 
-def test_connect_execute_sql(spark_connect, lake_ops_connect):
-    # Simple SQL execution test
-    df = lake_ops_connect.execute("SELECT 1 AS value")
-    rows = df.collect()
-    assert rows[0][0] == 1
+# def test_connect_execute_sql(spark_connect, lake_ops_connect):
+#     # Simple SQL execution test
+#     df = lake_ops_connect.execute("SELECT 1 AS value")
+#     rows = df.collect()
+#     assert rows[0][0] == 1

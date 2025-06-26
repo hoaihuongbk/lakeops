@@ -33,8 +33,7 @@ dependencies = [
 
 [project.optional-dependencies]
 spark = [
-    "pyspark[connect]~=3.5.0",
-    "databricks-connect==15.4.*"
+    "pyspark~=3.5.0",
 ]
 
 trino = [
