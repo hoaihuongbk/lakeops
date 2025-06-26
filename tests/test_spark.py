@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 
 @pytest.fixture
 def spark():
-
     return (
         SparkSession.builder.appName("LakeOpsTest")
         .master("local[1]")
@@ -121,7 +120,9 @@ def lake_ops_connect(spark_connect):
 
 def test_connect_read_write_delta(spark_connect, lake_ops_connect, tmp_path):
     # This test is similar to test_read_write_delta but uses SparkConnectEngine
-    test_data = spark_connect.createDataFrame([(1, "John"), (2, "Jane")], ["id", "name"])
+    test_data = spark_connect.createDataFrame(
+        [(1, "John"), (2, "Jane")], ["id", "name"]
+    )
     test_path = str(tmp_path / "test_connect_table")
     lake_ops_connect.write(test_data, test_path, format="delta")
     read_df = lake_ops_connect.read(test_path, format="delta")
@@ -134,4 +135,3 @@ def test_connect_execute_sql(spark_connect, lake_ops_connect):
     df = lake_ops_connect.execute("SELECT 1 AS value")
     rows = df.collect()
     assert rows[0][0] == 1
-

@@ -8,6 +8,7 @@ from lakeops import LakeOps
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 @pytest.fixture
 def lake_ops():
     return LakeOps()

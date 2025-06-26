@@ -16,6 +16,10 @@ integration_test:
 	@echo "Running integration tests"
 	@uv run pytest integration_tests/*.py -v --log-cli-level=INFO
 
+format:
+	@echo "Formatting the project"
+	@uv tool run ruff format src/ tests/
+
 lint:
 	@echo "Linting the project"
 	@uv tool run ruff check src/ --fix
@@ -28,3 +32,7 @@ test_docs:
 build_wheel:
 	@echo "Releasing the project"
 	@uv tool run maturin build
+
+setup_databricks:
+	@echo "Setting up Databricks"
+	@bash scripts/setup_databricks.sh
