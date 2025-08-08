@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock
 from lakeops.core.engines.spark_connect import SparkConnectEngine
 
 
-@patch("lakeops.core.engines.spark_connect.SparkSession")
+@patch("pyspark.sql.SparkSession")
 def test_spark_connect_engine_init(MockSparkSession):
     """Test that the SparkConnectEngine is initialized correctly."""
     # Arrange
