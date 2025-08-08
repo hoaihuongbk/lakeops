@@ -22,6 +22,10 @@ pip install lakeops[gsheet]
 
 # Install spark, trino, gsheet engines
 pip install lakeops[spark,trino,gsheet]
+
+# NEW: Install spark connect engine
+pip install lakeops[spark_connect]
+
 ```
 
 
