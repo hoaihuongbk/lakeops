@@ -6,13 +6,13 @@ use geo::functions::{point_in_polygon, calculate_distance, encode_geohash, decod
 use json::functions::{json_extract, is_valid_json};
 
 #[pymodule]
-#[pyo3(name="_lakeops_udf")]
-fn lakeops_udf(_py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(point_in_polygon, m)?)?;
-    m.add_function(wrap_pyfunction!(calculate_distance, m)?)?;
-    m.add_function(wrap_pyfunction!(json_extract, m)?)?;
-    m.add_function(wrap_pyfunction!(is_valid_json, m)?)?;
-    m.add_function(wrap_pyfunction!(encode_geohash, m)?)?;
-    m.add_function(wrap_pyfunction!(decode_geohash, m)?)?;
+#[pyo3(name = "_lakeops_udf")]
+fn lakeops_udf<'py>(_py: Python<'py>, m: &Bound<'py, PyModule>) -> PyResult<()> {
+    m.add_wrapped(wrap_pyfunction!(point_in_polygon))?;
+    m.add_wrapped(wrap_pyfunction!(calculate_distance))?;
+    m.add_wrapped(wrap_pyfunction!(json_extract))?;
+    m.add_wrapped(wrap_pyfunction!(is_valid_json))?;
+    m.add_wrapped(wrap_pyfunction!(encode_geohash))?;
+    m.add_wrapped(wrap_pyfunction!(decode_geohash))?;
     Ok(())
 }

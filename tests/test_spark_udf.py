@@ -35,16 +35,12 @@ def register_udfs(spark):
     spark.udf.register("encode_geohash", encode_geohash_udf)
     spark.udf.register("decode_geohash", decode_geohash_udf)
 
-@pytest.fixture(scope="module")
-def spark():
-    spark = SparkSession.builder.getOrCreate()
-    register_udfs(spark)
-    yield spark
-    spark.stop()
+
 
 
 @pytest.fixture
 def test_data(spark):
+    register_udfs(spark)
     data = [
         (
             '{"type":"Point","coordinates":[0.5,0.5]}',
