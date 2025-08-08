@@ -36,6 +36,10 @@ spark = [
     "pyspark~=3.5.0",
 ]
 
+spark_connect = [
+    "pyspark[connect]~=3.5.0",
+]
+
 trino = [
     "connectorx>=0.4.1",
     "trino[sqlalchemy]>=0.333.0",
