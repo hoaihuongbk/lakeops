@@ -2,6 +2,8 @@ import pytest
 from unittest.mock import patch, MagicMock
 from lakeops.core.engines.spark_connect import SparkConnectEngine
 
+pytestmark = pytest.mark.spark_connect
+
 
 @patch("pyspark.sql.SparkSession")
 def test_spark_connect_engine_init(MockSparkSession):

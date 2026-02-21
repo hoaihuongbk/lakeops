@@ -1,6 +1,9 @@
 import pytest
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import udf
+
+pytestmark = pytest.mark.spark
+
 from pyspark.sql.types import BooleanType, DoubleType, StringType, ArrayType, StructType, StructField
 from lakeops.udf import (
     point_in_polygon,

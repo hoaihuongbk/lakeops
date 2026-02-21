@@ -51,6 +51,10 @@ gsheet = [
     "gspread>=6.1.4",
 ]
 
+vault = [
+    "hvac>=2.3.0",
+]
+
 [build-system]
 requires = ["maturin>=1.0,<2.0", "hatchling"]
 build-backend = "maturin"
@@ -58,6 +62,11 @@ build-backend = "maturin"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
+markers = [
+    "spark: tests that require Apache Spark",
+    "spark_connect: tests that require Spark Connect",
+    "vault: tests that require Hashicorp Vault",
+]
 
 [dependency-groups]
 dev = [

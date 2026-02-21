@@ -9,8 +9,12 @@ build:
 	@uv tool run maturin develop
 
 test:
-	@echo "Running tests"
-	@uv run pytest tests/*.py -v -s --log-cli-level=INFO --cov=lakeops --cov-report=xml
+	@echo "Running core tests"
+	@uv run pytest tests/*.py -v -s -m "not spark and not spark_connect" --log-cli-level=INFO --cov=lakeops --cov-report=xml
+	@echo "Running spark tests"
+	@uv run pytest tests/*.py -v -s -m "spark" --log-cli-level=INFO --cov=lakeops --cov-append
+	@echo "Running spark-connect tests"
+	@uv run pytest tests/*.py -v -s -m "spark_connect" --log-cli-level=INFO --cov=lakeops --cov-append
 
 integration_test:
 	@echo "Running integration tests"
