@@ -72,6 +72,7 @@ markers = [
 dev = [
     "pytest-cov>=6.0.0",
     "pytest>=8.3.4",
+    "python-semantic-release>=9.12.0",
 ]
 lint = [
     "ruff>=0.9.4",
@@ -103,4 +104,13 @@ features = ["pyo3/extension-module"]
 module-name = "lakeops._lakeops_udf"
 python-source = "src"
 manifest-path = "rust/Cargo.toml"
+
+[tool.semantic_release]
+version_variables = ["src/lakeops/__init__.py:__version__"]
+version_toml = ["pyproject.toml:project.version"]
+major_on_zero = false
+branch = "main"
+upload_to_pypi = false
+upload_to_release = true
+build_command = "uv tool run maturin build"
 
