@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v1.0.1 (2026-02-21)
+
+### Bug Fixes
+
+- **release**: Refine semantic-release configuration for GitHub API
+  ([#31](https://github.com/hoaihuongbk/lakeops/pull/31),
+  [`4af4c88`](https://github.com/hoaihuongbk/lakeops/commit/4af4c884ca3e117bfb8e70206db082b288b77dd2))
+
+
 ## v1.0.0 (2026-02-21)
 
 ### Bug Fixes
