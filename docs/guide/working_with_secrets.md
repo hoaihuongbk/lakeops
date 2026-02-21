@@ -39,16 +39,38 @@ manager.read("key", scope="my-scope")
 ### Hashicorp Vault Backend
 Integration with Hashicorp Vault KV v2 engine using the [hvac](https://hvac.readthedocs.io/) library.
 
+#### Token Authentication (Default)
 ```python
 from lakeops.core.secrets import VaultSecretManager
 
-# Initialize with Vault URL and token
 manager = VaultSecretManager(
     url="https://vault.example.com:8200",
-    token="your-vault-token",
-    mount_point="secret" # Default is "secret"
+    token="your-vault-token"
 )
+```
 
+#### JWT/OIDC Authentication
+```python
+manager = VaultSecretManager(
+    url="https://vault.example.com:8200",
+    auth_method="jwt",
+    role="your-vault-role",
+    jwt_token="your-jwt-token"
+)
+```
+
+#### Kubernetes Authentication
+This method automatically reads the service account token from the default Kubernetes path.
+```python
+manager = VaultSecretManager(
+    url="https://vault.example.com:8200",
+    auth_method="kubernetes",
+    role="your-k8s-vault-role"
+)
+```
+
+#### Operations
+```python
 # Write a secret (uses path: {scope}/{key} or just {key})
 manager.write("api_key", "super-secret-value", scope="my-project")
 
