@@ -2,6 +2,31 @@
 
 <!-- version list -->
 
+## v1.1.0 (2026-02-21)
+
+### Chores
+
+- **release**: Disable asset uploads in semantic-release
+  ([#32](https://github.com/hoaihuongbk/lakeops/pull/32),
+  [`f7a9ff3`](https://github.com/hoaihuongbk/lakeops/commit/f7a9ff3cfca6baf93cbab0c435646f0445e53202))
+
+- **release**: Only trigger release on source or config changes
+  ([#32](https://github.com/hoaihuongbk/lakeops/pull/32),
+  [`f7a9ff3`](https://github.com/hoaihuongbk/lakeops/commit/f7a9ff3cfca6baf93cbab0c435646f0445e53202))
+
+### Documentation
+
+- **secrets**: Add vault jwt and kubernetes auth examples
+  ([#32](https://github.com/hoaihuongbk/lakeops/pull/32),
+  [`f7a9ff3`](https://github.com/hoaihuongbk/lakeops/commit/f7a9ff3cfca6baf93cbab0c435646f0445e53202))
+
+### Features
+
+- **secrets**: Support JWT and Kubernetes authentication for Vault
+  ([#32](https://github.com/hoaihuongbk/lakeops/pull/32),
+  [`f7a9ff3`](https://github.com/hoaihuongbk/lakeops/commit/f7a9ff3cfca6baf93cbab0c435646f0445e53202))
+
+
 ## v1.0.1 (2026-02-21)
 
 ### Bug Fixes
