@@ -1,10 +1,10 @@
 # TODO List
 
 ## Secret Management
-- [ ] **Vault Authentication Enhancements**
-    - Support JWT/OIDC authentication method.
-    - Support Kubernetes (K8s) authentication method for containerized workloads.
-    - Support AppRole for machine-to-machine authentication.
+- [x] **Vault Authentication Enhancements**
+    - [x] Support JWT/OIDC authentication method.
+    - [x] Support Kubernetes (K8s) authentication method for containerized workloads.
+    - [ ] Support AppRole for machine-to-machine authentication.
 - [ ] **Secret Rotation**
     - Implement a lifecycle management interface for rotating secrets.
 - [ ] **Cloud Provider Backends**
