@@ -35,11 +35,11 @@ dependencies = [
 
 [project.optional-dependencies]
 spark = [
-    "pyspark~=3.5.0",
+    "pyspark>=3.5.3,<4.0.0",
 ]
 
 spark_connect = [
-    "pyspark[connect]~=3.5.0",
+    "pyspark[connect]>=3.5.3,<4.0.0",
 ]
 
 trino = [
@@ -51,6 +51,10 @@ gsheet = [
     "gspread>=6.1.4",
 ]
 
+vault = [
+    "hvac>=2.3.0",
+]
+
 [build-system]
 requires = ["maturin>=1.0,<2.0", "hatchling"]
 build-backend = "maturin"
@@ -58,11 +62,17 @@ build-backend = "maturin"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
+markers = [
+    "spark: tests that require Apache Spark",
+    "spark_connect: tests that require Spark Connect",
+    "vault: tests that require Hashicorp Vault",
+]
 
 [dependency-groups]
 dev = [
     "pytest-cov>=6.0.0",
     "pytest>=8.3.4",
+    "python-semantic-release>=9.12.0",
 ]
 lint = [
     "ruff>=0.9.4",
@@ -94,4 +104,13 @@ features = ["pyo3/extension-module"]
 module-name = "lakeops._lakeops_udf"
 python-source = "src"
 manifest-path = "rust/Cargo.toml"
+
+[tool.semantic_release]
+version_variables = ["src/lakeops/__init__.py:__version__"]
+version_toml = ["pyproject.toml:project.version"]
+major_on_zero = false
+branch = "main"
+upload_to_pypi = false
+upload_to_release = true
+build_command = "uv tool run maturin build"
 

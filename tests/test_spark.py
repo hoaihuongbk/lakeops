@@ -3,6 +3,8 @@ import logging
 from lakeops import LakeOps
 from lakeops.core.engines import SparkEngine
 
+pytestmark = pytest.mark.spark
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

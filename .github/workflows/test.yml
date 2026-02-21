@@ -5,20 +5,24 @@ on:
     branches: [ main ]
     paths:
       - 'src/lakeops/**'
+      - 'rust/**'
+      - 'tests/**'
       - 'pyproject.toml'
   pull_request:
     branches: [ main ]
     paths:
       - 'src/lakeops/**'
+      - 'rust/**'
+      - 'tests/**'
       - 'pyproject.toml'
 
 jobs:
-  test:
-    runs-on: ${{ matrix.os }}
+  test-core:
+    name: Core Tests (${{ matrix.python-version }})
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest ]
         python-version: [ '3.10', '3.11', '3.12']
     steps:
       - uses: actions/checkout@v4
@@ -31,13 +35,78 @@ jobs:
       - name: Install dependencies
         run: uv sync --all-extras --group dev
 
-      - name: Run tests
-        run: uv run pytest tests/ -v --cov=lakeops --cov-report=xml
+      - name: Run Core tests
+        run: uv run pytest tests/ -v -m "not spark and not spark_connect" --cov=lakeops --cov-report=xml
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           slug: hoaihuongbk/lakeops
-          fail_ci_if_error: true
+          flags: core
+          fail_ci_if_error: false
+
+  test-spark:
+    name: Spark Tests (${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ '3.10', '3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Install uv and set the python version
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: uv sync --all-extras --group dev
+
+      - name: Run Spark tests
+        run: uv run pytest tests/ -v -m "spark" --cov=lakeops --cov-report=xml
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: hoaihuongbk/lakeops
+          flags: spark
+          fail_ci_if_error: false
+
+  test-spark-connect:
+    name: Spark Connect Tests (${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [ '3.10', '3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv and set the python version
+        uses: astral-sh/setup-uv@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: uv sync --all-extras --group dev
+
+      - name: Run Spark Connect tests
+        run: uv run pytest tests/ -v -m "spark_connect" --cov=lakeops --cov-report=xml
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: hoaihuongbk/lakeops
+          flags: spark-connect
+          fail_ci_if_error: false
 

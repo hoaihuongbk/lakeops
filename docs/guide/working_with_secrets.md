@@ -36,6 +36,26 @@ manager.write("key", "value", scope="my-scope")
 manager.read("key", scope="my-scope")
 ```
 
+### Hashicorp Vault Backend
+Integration with Hashicorp Vault KV v2 engine using the [hvac](https://hvac.readthedocs.io/) library.
+
+```python
+from lakeops.core.secrets import VaultSecretManager
+
+# Initialize with Vault URL and token
+manager = VaultSecretManager(
+    url="https://vault.example.com:8200",
+    token="your-vault-token",
+    mount_point="secret" # Default is "secret"
+)
+
+# Write a secret (uses path: {scope}/{key} or just {key})
+manager.write("api_key", "super-secret-value", scope="my-project")
+
+# Read a secret (returns redacted by default)
+value = manager.read("api_key", scope="my-project", redacted=True)
+# Returns: *************alue
+```
 
 ## Best Practices
 1. Always use scopes in production environments
