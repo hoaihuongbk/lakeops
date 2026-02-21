@@ -35,11 +35,11 @@ dependencies = [
 
 [project.optional-dependencies]
 spark = [
-    "pyspark~=3.5.0",
+    "pyspark>=3.5.3",
 ]
 
 spark_connect = [
-    "pyspark[connect]~=3.5.0",
+    "pyspark[connect]>=3.5.3",
 ]
 
 trino = [
