@@ -1,7 +1,10 @@
-import pytest
-from unittest.mock import MagicMock, patch, mock_open
-from lakeops.core.secrets import VaultSecretManager
+import os
+from unittest.mock import MagicMock, mock_open, patch
+
 import hvac
+import pytest
+
+from lakeops.core.secrets import VaultSecretManager
 
 pytestmark = pytest.mark.vault
 
@@ -111,3 +114,40 @@ def test_vault_read_nonexistent_key(mock_vault_client):
 
     with pytest.raises(KeyError, match="Key 'test_key' not found"):
         manager.read("test_key")
+
+
+def test_vault_token_from_env(monkeypatch, mock_vault_client):
+    monkeypatch.setenv("LAKEOPS_VAULT_TOKEN", "env-token")
+
+    manager = VaultSecretManager(url="http://localhost:8200")
+
+    assert manager.client.token == "env-token"
+
+
+def test_vault_jwt_from_env(monkeypatch, mock_vault_client):
+    mock_client = mock_vault_client.return_value
+
+    monkeypatch.setenv("LAKEOPS_VAULT_ROLE", "env-role")
+    monkeypatch.setenv("LAKEOPS_VAULT_JWT_TOKEN", "env-jwt")
+    monkeypatch.setenv("LAKEOPS_VAULT_JWT_PATH", "env-jwt-path")
+
+    VaultSecretManager(url="http://localhost:8200", auth_method="jwt")
+
+    mock_client.auth.jwt.login.assert_called_once_with(
+        role="env-role", jwt="env-jwt", path="env-jwt-path"
+    )
+
+
+def test_vault_kubernetes_from_env(monkeypatch, mock_vault_client):
+    mock_client = mock_vault_client.return_value
+
+    monkeypatch.setenv("LAKEOPS_VAULT_ROLE", "env-role")
+    monkeypatch.setenv("LAKEOPS_VAULT_K8S_AUTH_PATH", "env-auth-path")
+    monkeypatch.setenv("LAKEOPS_VAULT_K8S_JWT_PATH", "/tmp/env-k8s-jwt")
+
+    with patch("builtins.open", mock_open(read_data="env-k8s-jwt")):
+        VaultSecretManager(url="http://localhost:8200", auth_method="kubernetes")
+
+    mock_client.auth.kubernetes.login.assert_called_once_with(
+        role="env-role", jwt="env-k8s-jwt", mount_point="env-auth-path"
+    )

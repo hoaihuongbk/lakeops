@@ -1,5 +1,8 @@
 from typing import Any, Dict, Optional
+import os
+
 import hvac
+
 from .interface import SecretManager
 from .utils import redact_secret
 
@@ -39,8 +42,11 @@ class VaultSecretManager(SecretManager):
         self.auth_method = auth_method.lower()
 
         if self.auth_method == "token":
-            if token:
-                self.client.token = token
+            token_value = token or os.getenv("LAKEOPS_VAULT_TOKEN") or os.getenv(
+                "VAULT_TOKEN"
+            )
+            if token_value:
+                self.client.token = token_value
         elif self.auth_method == "jwt":
             self._authenticate_jwt(**kwargs)
         elif self.auth_method == "kubernetes":
@@ -50,9 +56,9 @@ class VaultSecretManager(SecretManager):
 
     def _authenticate_jwt(self, **kwargs):
         """Authenticate using JWT method."""
-        role = kwargs.get("role")
-        jwt_token = kwargs.get("jwt_token")
-        path = kwargs.get("path", "jwt")
+        role = kwargs.get("role") or os.getenv("LAKEOPS_VAULT_ROLE")
+        jwt_token = kwargs.get("jwt_token") or os.getenv("LAKEOPS_VAULT_JWT_TOKEN")
+        path = kwargs.get("path") or os.getenv("LAKEOPS_VAULT_JWT_PATH") or "jwt"
 
         if not role or not jwt_token:
             raise ValueError("Role and jwt_token are required for JWT authentication")
@@ -61,10 +67,12 @@ class VaultSecretManager(SecretManager):
 
     def _authenticate_kubernetes(self, **kwargs):
         """Authenticate using Kubernetes method."""
-        role = kwargs.get("role")
-        path = kwargs.get("path", "kubernetes")
-        jwt_path = kwargs.get(
-            "jwt_path", "/var/run/secrets/kubernetes.io/serviceaccount/token"
+        role = kwargs.get("role") or os.getenv("LAKEOPS_VAULT_ROLE")
+        path = kwargs.get("path") or os.getenv("LAKEOPS_VAULT_K8S_AUTH_PATH") or "kubernetes"
+        jwt_path = (
+            kwargs.get("jwt_path")
+            or os.getenv("LAKEOPS_VAULT_K8S_JWT_PATH")
+            or "/var/run/secrets/kubernetes.io/serviceaccount/token"
         )
 
         if not role:
