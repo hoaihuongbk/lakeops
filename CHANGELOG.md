@@ -2,6 +2,29 @@
 
 <!-- version list -->
 
+## v1.2.0 (2026-03-07)
+
+### Bug Fixes
+
+- **docs**: Update the vault secrets docs for the support system env
+  ([#33](https://github.com/hoaihuongbk/lakeops/pull/33),
+  [`664195a`](https://github.com/hoaihuongbk/lakeops/commit/664195ac48fcb677a1ce731c7e82ae8cfdce434c))
+
+### Features
+
+- **api**: Support partitionBy from spark engine & enhance VaultSecretManager constructor
+  ([#33](https://github.com/hoaihuongbk/lakeops/pull/33),
+  [`664195a`](https://github.com/hoaihuongbk/lakeops/commit/664195ac48fcb677a1ce731c7e82ae8cfdce434c))
+
+- **api**: Support partitionBy from spark engine write api
+  ([#33](https://github.com/hoaihuongbk/lakeops/pull/33),
+  [`664195a`](https://github.com/hoaihuongbk/lakeops/commit/664195ac48fcb677a1ce731c7e82ae8cfdce434c))
+
+- **secrets**: Support init VaultSecretManager from inject system env like LAKEOPS_VAULT_JWT_TOKEN,
+  LAKEOPS_VAULT_TOKEN, etc... ([#33](https://github.com/hoaihuongbk/lakeops/pull/33),
+  [`664195a`](https://github.com/hoaihuongbk/lakeops/commit/664195ac48fcb677a1ce731c7e82ae8cfdce434c))
+
+
 ## v1.1.0 (2026-02-21)
 
 ### Chores
