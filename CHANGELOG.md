@@ -2,6 +2,15 @@
 
 <!-- version list -->
 
+## v1.3.0 (2026-03-07)
+
+### Features
+
+- **api**: Add CLI to work with lakeops from command line
+  ([#34](https://github.com/hoaihuongbk/lakeops/pull/34),
+  [`8534cc7`](https://github.com/hoaihuongbk/lakeops/commit/8534cc76ca5a2c9ade5783d4bdcc78a80bc9743f))
+
+
 ## v1.2.0 (2026-03-07)
 
 ### Bug Fixes
