@@ -31,29 +31,15 @@ dependencies = [
     "pandas>=2.2.3",
     "polars>=1.21.0",
     "pyarrow>=19.0.0",
-]
-
-[project.optional-dependencies]
-spark = [
-    "pyspark>=3.5.3,<4.0.0",
-]
-
-spark_connect = [
     "pyspark[connect]>=3.5.3,<4.0.0",
-]
-
-trino = [
     "connectorx>=0.4.1",
     "trino[sqlalchemy]>=0.333.0",
-]
-
-gsheet = [
     "gspread>=6.1.4",
-]
-
-vault = [
     "hvac>=2.3.0",
 ]
+
+[project.scripts]
+lakeops = "lakeops.cli:main"
 
 [build-system]
 requires = ["maturin>=1.0,<2.0", "hatchling"]

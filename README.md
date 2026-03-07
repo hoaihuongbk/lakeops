@@ -20,8 +20,16 @@ To learn more, read the [user guide](https://hoaihuongbk.github.io/lakeops/).
 ## Quick Start
 
 ### Installation
+
 ```bash
+# Using pip
 pip install lakeops
+
+# Using uv
+uv pip install lakeops
+
+# Using poetry
+poetry add lakeops
 ```
 
 ### Sample Usage

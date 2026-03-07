@@ -19,6 +19,12 @@
     - Optimize Polars to Spark DataFrame conversion for large datasets.
     - Implement lazy execution where possible across all engines to optimize pushdown filters.
 
+## CLI
+- [ ] **Engine Support**
+    - Extend the CLI to support additional engines (Spark, Spark Connect, Google Sheets) with consistent flags and configuration.
+- [ ] **Write API**
+    - Add `lakeops write` to mirror the Python `LakeOps.write` API for common workflows.
+
 ## Rust Extensions (UDFs)
 - [ ] **New UDFs**
     - Add H3 indexing support for geospatial operations.
