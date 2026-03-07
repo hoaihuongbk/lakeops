@@ -1,5 +1,6 @@
 import pytest
 import logging
+from pathlib import Path
 from lakeops import LakeOps
 from lakeops.core.engines import SparkEngine
 
@@ -68,6 +69,71 @@ def test_read_write_iceberg(spark, lake_ops, tmp_path):
     # Verify data
     row_count = read_df.count()
     logger.info(f"Read {row_count} rows from Polars Delta table")
+    assert row_count == 2
+    assert read_df.collect() == test_data.collect()
+
+
+def test_read_write_delta_with_partition_by(spark, lake_ops, tmp_path):
+    logger.info(f"Using temporary directory: {tmp_path}")
+
+    test_data = spark.createDataFrame(
+        [(1, "John"), (2, "Jane"), (1, "Jim")], ["id", "name"]
+    )
+
+    test_path = Path(tmp_path) / "partitioned_table"
+    logger.info(f"Writing partitioned Delta table to: {test_path}")
+    lake_ops.write(
+        test_data,
+        str(test_path),
+        format="delta",
+        options={"partitionBy": ["id"]},
+    )
+
+    # Ensure partition directories are created (Spark-style id=<value>)
+    partition_dirs = list(test_path.glob("id=*"))
+    assert partition_dirs, "Expected partition directories to be created for 'id'"
+
+    # Read data back and ensure it matches
+    read_df = lake_ops.read(str(test_path), format="delta")
+    assert read_df.count() == 3
+    assert sorted(read_df.collect(), key=lambda r: (r["id"], r["name"])) == sorted(
+        test_data.collect(), key=lambda r: (r["id"], r["name"])
+    )
+
+
+def test_read_write_iceberg_with_partition_by(spark, lake_ops, tmp_path):
+    logger.info(f"Using temporary directory: {tmp_path}")
+
+    # Create test data
+    test_data = spark.createDataFrame([(1, "Alice"), (2, "Bob")], ["id", "name"])
+
+    # Write data using LakeOps
+    # Use proper Iceberg table path with catalog
+    table_name = "local.db.test_partitioned_table"
+
+    # Set required Spark configurations for Iceberg
+    spark.conf.set("spark.sql.catalog.local", "org.apache.iceberg.spark.SparkCatalog")
+    spark.conf.set("spark.sql.catalog.local.type", "hadoop")
+    spark.conf.set("spark.sql.catalog.local.warehouse", f"{tmp_path}")
+
+    logger.info(f"Writing partitioned Iceberg table name: {table_name}")
+    lake_ops.write(
+        test_data,
+        table_name,
+        format="iceberg",
+        options={
+            "write.format.default": "parquet",
+            "partitionBy": ["id"],
+        },
+    )
+
+    # Read data back using LakeOps
+    logger.info("Reading Iceberg table")
+    read_df = lake_ops.read(table_name, format="iceberg")
+
+    # Verify data
+    row_count = read_df.count()
+    logger.info(f"Read {row_count} rows from Iceberg table")
     assert row_count == 2
     assert read_df.collect() == test_data.collect()
 

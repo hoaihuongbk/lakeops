@@ -44,8 +44,16 @@ class SparkEngine(Engine):
             self.write_to_table(data, path, format, mode, options)
         else:
             writer = data.write.format(format).mode(mode)
-            if options:
-                writer = writer.options(**options)
+            opts: Dict[str, Any] = dict(options) if options else {}
+            partition_cols = opts.pop("partitionBy", None)
+
+            if partition_cols:
+                if not isinstance(partition_cols, (list, tuple)) or len(partition_cols) == 0:
+                    raise ValueError("partitionBy option must be a non-empty list or tuple of column names")
+                writer = writer.partitionBy(*partition_cols)
+
+            if opts:
+                writer = writer.options(**opts)
             writer.save(path)
 
     def write_to_table(
@@ -58,8 +66,16 @@ class SparkEngine(Engine):
     ):
         # https://spark.apache.org/docs/latest/api/python/reference/pyspark.sql/api/pyspark.sql.DataFrame.writeTo.html
         writer = data.writeTo(table_name).using(format)
-        if options:
-            writer = writer.options(**options)
+        opts: Dict[str, Any] = dict(options) if options else {}
+        partition_cols = opts.pop("partitionBy", None)
+
+        if partition_cols:
+            if not isinstance(partition_cols, (list, tuple)) or len(partition_cols) == 0:
+                raise ValueError("partitionBy option must be a non-empty list or tuple of column names")
+            writer = writer.partitionedBy(*partition_cols)
+
+        if opts:
+            writer = writer.options(**opts)
         if mode == "overwrite":
             writer.createOrReplace()
         else:

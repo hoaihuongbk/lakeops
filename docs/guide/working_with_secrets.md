@@ -39,6 +39,57 @@ manager.read("key", scope="my-scope")
 ### Hashicorp Vault Backend
 Integration with Hashicorp Vault KV v2 engine using the [hvac](https://hvac.readthedocs.io/) library.
 
+#### Configuration via Environment Variables
+
+In most production environments (for example, Kubernetes pods), Vault credentials are injected as environment variables.  
+`VaultSecretManager` can auto-configure itself from the following variables, so you do not need to pass them explicitly:
+
+- **Token authentication**
+  - `LAKEOPS_VAULT_TOKEN` (preferred)
+  - `VAULT_TOKEN` (fallback)
+
+- **JWT/OIDC authentication**
+  - `LAKEOPS_VAULT_ROLE` – Vault role name
+  - `LAKEOPS_VAULT_JWT_TOKEN` – JWT/OIDC token value
+  - `LAKEOPS_VAULT_JWT_PATH` – auth mount path (defaults to `jwt` if not set)
+
+- **Kubernetes authentication**
+  - `LAKEOPS_VAULT_ROLE` – Vault role name
+  - `LAKEOPS_VAULT_K8S_AUTH_PATH` – auth mount path (defaults to `kubernetes`)
+  - `LAKEOPS_VAULT_K8S_JWT_PATH` – path to the service account JWT file  
+    (defaults to `/var/run/secrets/kubernetes.io/serviceaccount/token`)
+
+Examples:
+
+```bash
+export LAKEOPS_VAULT_TOKEN="your-vault-token"
+python your_app.py
+```
+
+```bash
+export LAKEOPS_VAULT_ROLE="your-vault-role"
+export LAKEOPS_VAULT_JWT_TOKEN="your-jwt-token"
+export LAKEOPS_VAULT_JWT_PATH="jwt"
+python your_app.py
+```
+
+```bash
+export LAKEOPS_VAULT_ROLE="your-k8s-vault-role"
+export LAKEOPS_VAULT_K8S_AUTH_PATH="kubernetes"
+export LAKEOPS_VAULT_K8S_JWT_PATH="/var/run/secrets/kubernetes.io/serviceaccount/token"
+python your_app.py
+```
+
+With these environment variables set, you can use minimal constructors like:
+
+```python
+from lakeops.core.secrets import VaultSecretManager
+
+manager = VaultSecretManager(url="https://vault.example.com:8200")  # token auth from env
+manager_jwt = VaultSecretManager(url="https://vault.example.com:8200", auth_method="jwt")
+manager_k8s = VaultSecretManager(url="https://vault.example.com:8200", auth_method="kubernetes")
+```
+
 #### Token Authentication (Default)
 ```python
 from lakeops.core.secrets import VaultSecretManager
