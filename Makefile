@@ -16,6 +16,11 @@ test:
 	@echo "Running spark-connect tests"
 	@uv run pytest tests/*.py -v -s -m "spark_connect" --log-cli-level=INFO --cov=lakeops --cov-append
 
+test_cli:
+	@echo "Testing lakeops CLI"
+	@uv run lakeops --help
+	@uv run lakeops execute "SELECT 1" --engine duckdb
+
 integration_test:
 	@echo "Running integration tests"
 	@uv run pytest integration_tests/*.py -v --log-cli-level=INFO
